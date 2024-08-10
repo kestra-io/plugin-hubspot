@@ -18,11 +18,12 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Creates ticket in Hubspot"
+    title = "Creates ticket in Hubspot."
 )
 @Plugin(
     examples = {
         @Example(
+            full = true,
             code = """
                    - id: hubspot
                      type: io.kestra.plugin.hubspot.tickets.Create
