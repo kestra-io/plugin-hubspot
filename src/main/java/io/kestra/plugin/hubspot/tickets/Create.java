@@ -25,14 +25,18 @@ import lombok.experimental.SuperBuilder;
         @Example(
             full = true,
             code = """
-                   - id: hubspot
-                     type: io.kestra.plugin.hubspot.tickets.Create
-                     apiKey: my_api_key
-                     subject: Workflow failed
-                     content: "{{ execution.id }} has failed on {{ taskrun.startDate }}"
-                     stage: 3
-                     priority: HIGH
-                   """
+                id: hubspot_tickets_create
+                namespace: company.team
+
+                tasks:
+                  - id: create_ticket
+                    type: io.kestra.plugin.hubspot.tickets.Create
+                    apiKey: my_api_key
+                    subject: Workflow failed
+                    content: "{{ execution.id }} has failed on {{ taskrun.startDate }}"
+                    stage: 3
+                    priority: HIGH
+                """
         )
     }
 )
