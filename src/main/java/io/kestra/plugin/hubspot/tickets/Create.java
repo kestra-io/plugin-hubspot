@@ -32,10 +32,39 @@ import lombok.experimental.SuperBuilder;
                   - id: create_ticket
                     type: io.kestra.plugin.hubspot.tickets.Create
                     apiKey: my_api_key
+                    subject: "Increased 5xx in Demo Service"
+                    content: "The number of 5xx has increased beyond the threshold for Demo service."
+                    stage: 3
+                    priority: HIGH
+                """
+        ),
+        @Example(
+            title = "Create an issue when a Kestra workflow in any namespace with `company` as prefix fails.",
+            full = true,
+            code = """
+                id: create_ticket_on_failure
+                namespace: system
+
+                tasks:
+                  - id: create_ticket
+                    type: io.kestra.plugin.hubspot.tickets.Create
+                    apiKey: my_api_key
                     subject: Workflow failed
                     content: "{{ execution.id }} has failed on {{ taskrun.startDate }}"
                     stage: 3
                     priority: HIGH
+            
+                triggers:
+                  - id: on_failure
+                    type: io.kestra.plugin.core.trigger.Flow
+                    conditions:
+                      - type: io.kestra.plugin.core.condition.ExecutionStatusCondition
+                        in:
+                          - FAILED
+                          - WARNING
+                      - type: io.kestra.plugin.core.condition.ExecutionNamespaceCondition
+                        namespace: company
+                        comparison: PREFIX
                 """
         )
     }
