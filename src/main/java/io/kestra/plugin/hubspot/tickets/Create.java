@@ -89,7 +89,7 @@ public class Create extends HubspotConnection implements RunnableTask<Create.Out
 
     @Override
     public Create.Output run(RunContext runContext) throws Exception {
-        TicketRequest request = new TicketRequest(runContext.render(this.content), runContext.render(this.content), this.stage);
+        TicketRequest request = new TicketRequest(runContext.render(this.subject), runContext.render(this.content), this.stage);
 
         if (this.priority != null) {
             request.setPriority(this.priority.name());
