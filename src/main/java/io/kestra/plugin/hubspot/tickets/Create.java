@@ -2,7 +2,7 @@ package io.kestra.plugin.hubspot.tickets;
 
 import io.kestra.core.models.annotations.Example;
 import io.kestra.core.models.annotations.Plugin;
-import io.kestra.core.models.annotations.PluginProperty;
+import io.kestra.core.models.property.Property;
 import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.runners.RunContext;
 import io.kestra.plugin.hubspot.HubspotConnection;
@@ -53,7 +53,7 @@ import lombok.experimental.SuperBuilder;
                     content: "{{ execution.id }} has failed on {{ taskrun.startDate }}"
                     stage: 3
                     priority: HIGH
-            
+
                 triggers:
                   - id: on_failure
                     type: io.kestra.plugin.core.trigger.Flow
@@ -82,27 +82,23 @@ public class Create extends HubspotConnection implements RunnableTask<Create.Out
     @Schema(
         title = "Ticket subject"
     )
-    @PluginProperty(dynamic = true)
-    private String subject;
+    private Property<String> subject;
 
     @Schema(
         title = "Ticket body"
     )
-    @PluginProperty(dynamic = true)
-    private String content;
+    private Property<String> content;
 
     @Schema(
         title = "Ticket pipeline"
     )
-    @PluginProperty
-    private Integer pipeline;
+    private Property<Integer> pipeline;
 
     @Schema(
         title = "Ticket pipeline stage"
     )
     @Builder.Default
-    @PluginProperty
-    private Integer stage = 1;
+    private Property<Integer> stage = Property.of(1);
 
     @Schema(
         title = "Ticket priority",
@@ -113,19 +109,22 @@ public class Create extends HubspotConnection implements RunnableTask<Create.Out
                       HIGH: High priority
                       """
     )
-    @PluginProperty
-    private Priority priority;
+    private Property<Priority> priority;
 
     @Override
     public Create.Output run(RunContext runContext) throws Exception {
-        TicketRequest request = new TicketRequest(runContext.render(this.subject), runContext.render(this.content), this.stage);
+        TicketRequest request = new TicketRequest(
+            runContext.render(this.subject).as(String.class).orElse(null),
+            runContext.render(this.content).as(String.class).orElse(null),
+            runContext.render(this.stage).as(Integer.class).orElse(null)
+        );
 
         if (this.priority != null) {
-            request.setPriority(this.priority.name());
+            request.setPriority(runContext.render(this.priority).as(Priority.class).orElseThrow().name());
         }
 
         if (this.pipeline != null) {
-            request.setHsPipeline(this.pipeline);
+            request.setHsPipeline(runContext.render(this.pipeline).as(Integer.class).orElseThrow());
         }
 
         String requestBody = mapper.writeValueAsString(request);

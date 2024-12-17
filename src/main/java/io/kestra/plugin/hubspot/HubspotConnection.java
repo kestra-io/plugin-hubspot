@@ -3,6 +3,7 @@ package io.kestra.plugin.hubspot;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Strings;
 import io.kestra.core.models.annotations.PluginProperty;
+import io.kestra.core.models.property.Property;
 import io.kestra.core.models.tasks.Task;
 import io.kestra.core.runners.RunContext;
 import io.kestra.core.serializers.JacksonMapper;
@@ -35,17 +36,17 @@ public abstract class HubspotConnection extends Task {
     @Schema(
         title = "Hubspot API key"
     )
-    @PluginProperty(dynamic = true)
-    private String apiKey;
+    private Property<String> apiKey;
 
     @Schema(
         title = "Hubspot OAuth token"
     )
-    @PluginProperty(dynamic = true)
-    private String oauthToken;
+    private Property<String> oauthToken;
 
     public <T> T makeCall(RunContext runContext, String body, Class<T> clazz) throws Exception {
-        String authorizationToken = apiKey != null ? runContext.render(this.apiKey) : runContext.render(this.oauthToken);
+        String authorizationToken = apiKey != null ?
+            runContext.render(this.apiKey).as(String.class).orElse(null) :
+            runContext.render(this.oauthToken).as(String.class).orElse(null);
 
         if (Strings.isNullOrEmpty(authorizationToken)) {
             throw new IllegalArgumentException("Either apiKey or oauthToken should be provided");
