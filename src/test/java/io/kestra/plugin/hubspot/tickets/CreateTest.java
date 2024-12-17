@@ -2,6 +2,7 @@ package io.kestra.plugin.hubspot.tickets;
 
 import com.google.common.base.Strings;
 import io.kestra.core.junit.annotations.KestraTest;
+import io.kestra.core.models.property.Property;
 import io.kestra.core.runners.RunContext;
 import io.kestra.core.runners.RunContextFactory;
 import jakarta.inject.Inject;
@@ -26,10 +27,10 @@ class CreateTest {
         RunContext runContext = runContextFactory.of();
 
         Create task = Create.builder()
-            .apiKey(getApiKey())
-            .subject("This is a test")
-            .content("This is a test from kestra unit tests")
-            .stage(4)
+            .apiKey(Property.of(getApiKey()))
+            .subject(Property.of("This is a test"))
+            .content(Property.of("This is a test from kestra unit tests"))
+            .stage(Property.of(4))
             .build();
 
         Create.Output runOutput = task.run(runContext);
