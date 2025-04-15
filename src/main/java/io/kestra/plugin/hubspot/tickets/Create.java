@@ -18,7 +18,7 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Creates ticket in Hubspot."
+    title = "Create a Hubspot ticket."
 )
 @Plugin(
     examples = {
