@@ -1,16 +1,21 @@
 package io.kestra.plugin.hubspot.tickets;
 
+import io.kestra.core.http.HttpRequest;
 import io.kestra.core.models.annotations.Example;
 import io.kestra.core.models.annotations.Plugin;
 import io.kestra.core.models.property.Property;
 import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.runners.RunContext;
-import io.kestra.plugin.hubspot.HubspotConnection;
-import io.kestra.plugin.hubspot.models.TicketRequest;
-import io.kestra.plugin.hubspot.models.TicketResponse;
+import io.kestra.plugin.hubspot.AbstractCreateTask;
+import io.kestra.plugin.hubspot.HubspotResponse;
+import io.kestra.plugin.hubspot.model.TicketRequest;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.slf4j.Logger;
+
+import java.net.URI;
+import java.util.List;
 
 @SuperBuilder
 @ToString
@@ -69,16 +74,15 @@ import lombok.experimental.SuperBuilder;
         )
     }
 )
-public class Create extends HubspotConnection implements RunnableTask<Create.Output> {
+public class Create extends AbstractCreateTask implements RunnableTask<AbstractCreateTask.Output> {
 
     public static final String HUBSPOT_TICKET_ENDPOINT = "/crm/v3/objects/tickets";
 
     public enum Priority {
         LOW,
         MEDIUM,
-        HIGH
+        HIGH;
     }
-
     @Schema(
         title = "Ticket subject"
     )
@@ -103,16 +107,19 @@ public class Create extends HubspotConnection implements RunnableTask<Create.Out
     @Schema(
         title = "Ticket priority",
         description = """
-                      (Optional) Available values:
-                      LOW: Low priority
-                      MEDIUM: Medium priority
-                      HIGH: High priority
-                      """
+            (Optional) Available values:
+            LOW: Low priority
+            MEDIUM: Medium priority
+            HIGH: High priority
+        """
     )
     private Property<Priority> priority;
 
     @Override
     public Create.Output run(RunContext runContext) throws Exception {
+
+        Logger logger = runContext.logger();
+
         TicketRequest request = new TicketRequest(
             runContext.render(this.subject).as(String.class).orElse(null),
             runContext.render(this.content).as(String.class).orElse(null),
@@ -127,12 +134,31 @@ public class Create extends HubspotConnection implements RunnableTask<Create.Out
             request.setHsPipeline(runContext.render(this.pipeline).as(Integer.class).orElseThrow());
         }
 
+        URI uri = URI.create(buildHubspotURL());
+
         String requestBody = mapper.writeValueAsString(request);
 
-        TicketResponse response = makeCall(runContext, requestBody, TicketResponse.class);
+        logger.info("Request body: {}", requestBody);
+
+        HttpRequest.HttpRequestBuilder requestBuilder = HttpRequest.builder()
+                .uri(uri)
+                .addHeader("Content-Type", JSON_CONTENT_TYPE)
+                .method("POST")
+                .body(HttpRequest.StringRequestBody.builder().content(requestBody).build());
+
+        getAuthorizedRequest(runContext, requestBuilder);
+
+        HubspotResponse response = makeCall(runContext, requestBuilder, HubspotResponse.class);
+
+        logger.info("Created HubSpot record: {}", response);
+
+        URI fileURI = store(runContext, List.of(response.getProperties()));
+
+        logger.info("Created hubspot ticket: {}", response);
 
         return Output.builder()
             .id(response.getId())
+            .uri(fileURI)
             .build();
     }
 
@@ -140,16 +166,4 @@ public class Create extends HubspotConnection implements RunnableTask<Create.Out
     protected String getEndpoint() {
         return HUBSPOT_TICKET_ENDPOINT;
     }
-
-    @Getter
-    @Builder
-    public static class Output implements io.kestra.core.models.tasks.Output {
-
-        @Schema(
-            title = "Ticket id"
-        )
-        private Long id;
-
-    }
-
 }
