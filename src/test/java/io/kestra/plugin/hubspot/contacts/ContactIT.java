@@ -6,6 +6,7 @@ import io.kestra.core.models.property.Property;
 import io.kestra.core.models.tasks.VoidOutput;
 import io.kestra.core.runners.RunContext;
 import io.kestra.core.runners.RunContextFactory;
+import io.kestra.plugin.hubspot.AbstractTaskIT;
 import jakarta.inject.Inject;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -22,7 +23,7 @@ import static org.hamcrest.Matchers.*;
     value = "isApiKeyNull",
     disabledReason = "For CI/CD as requires secret apiKey or oauthToken"
 )
-public class ContactIT {
+public class ContactIT extends AbstractTaskIT {
 
     @Inject
     private RunContextFactory runContextFactory;
@@ -109,13 +110,5 @@ public class ContactIT {
         Search.Output runOutput = task.run(runContext);
 
         assertThat(runOutput.getTotal(), greaterThanOrEqualTo(1));
-    }
-
-    private static boolean isApiKeyNull() {
-        return Strings.isNullOrEmpty(getApiKey());
-    }
-
-    private static String getApiKey() {
-        return "";
     }
 }

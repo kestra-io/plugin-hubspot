@@ -5,6 +5,7 @@ import io.kestra.core.junit.annotations.KestraTest;
 import io.kestra.core.models.property.Property;
 import io.kestra.core.runners.RunContext;
 import io.kestra.core.runners.RunContextFactory;
+import io.kestra.plugin.hubspot.AbstractTaskIT;
 import jakarta.inject.Inject;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledIf;
@@ -18,7 +19,7 @@ import static org.hamcrest.Matchers.notNullValue;
     value = "isApiKeyNull",
     disabledReason = "For CI/CD as requires secret apiKet or oauthToken"
 )
-class CreateTest {
+class CreateTest extends AbstractTaskIT {
     @Inject
     private RunContextFactory runContextFactory;
 
@@ -37,13 +38,4 @@ class CreateTest {
 
         assertThat(runOutput.getId(), is(notNullValue()));
     }
-
-    private static boolean isApiKeyNull() {
-        return Strings.isNullOrEmpty(getApiKey());
-    }
-
-    private static String getApiKey() {
-        return "";
-    }
-
 }
