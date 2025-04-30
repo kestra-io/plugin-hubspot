@@ -21,8 +21,6 @@ public abstract class AbstractDeleteTask extends HubspotConnection {
 
     public VoidOutput run(RunContext runContext, String recordId) throws Exception {
 
-        Logger logger = runContext.logger();
-
         URI uri = URI.create(buildHubspotURL() + "/" + recordId);
 
         HttpRequest.HttpRequestBuilder requestBuilder = HttpRequest.builder()

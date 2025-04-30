@@ -1,4 +1,4 @@
-package io.kestra.plugin.hubspot.model;
+package io.kestra.plugin.hubspot.contacts;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -36,11 +36,6 @@ public class ContactRequest {
     @JsonIgnore
     public void setJobTitle(String jobTitle) {
         properties.put("jobtitle", jobTitle);
-    }
-
-    @JsonIgnore
-    public void setCompany(String company) {
-        properties.put("company", company);
     }
 
     @JsonIgnore

@@ -32,11 +32,6 @@ import lombok.experimental.SuperBuilder;
                   - id: search_companies
                     type: io.kestra.plugin.hubspot.companies.Search
                     apiKey: my_api_key
-                    filterGroups:
-                      - filters:
-                          - propertyName: "industry"
-                            operator: "EQ"
-                            value: "TECHNOLOGY"
                     properties:
                       - name
                       - domain

@@ -9,10 +9,7 @@ import lombok.experimental.SuperBuilder;
 import org.slf4j.Logger;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @SuperBuilder
 @ToString
@@ -22,7 +19,7 @@ import java.util.Map;
 public abstract class AbstractSearchTask extends HubspotConnection {
 
     @Schema(
-        title = "Search all default text properties in records of the specified object"
+        title = "Search all default text properties in records of the specified object. [Learn more](https://developers.hubspot.com/docs/api/crm/search)"
     )
     private Property<String> query;
 
@@ -59,26 +56,23 @@ public abstract class AbstractSearchTask extends HubspotConnection {
 
         Map<String, Object> requestBody = new HashMap<>();
 
-        requestBody.put("query",runContext.render(this.query).as(String.class).orElseThrow());
+        runContext.render(this.query).as(String.class)
+            .ifPresent(v -> requestBody.put("query", v));
 
-        requestBody.put("filterGroups", runContext.render(this.filterGroups).asList(Map.class));
+        Optional.ofNullable(runContext.render(this.filterGroups).asList(Map.class))
+            .ifPresent(v -> requestBody.put("filterGroups", v));
 
-        List<String> propertyNames = runContext.render(this.properties).asList(String.class);
+        Optional.ofNullable(runContext.render(this.properties).asList(String.class))
+            .ifPresent(v -> requestBody.put("properties", v));
 
-        requestBody.put("properties", propertyNames);
+        runContext.render(this.limit).as(Integer.class)
+            .ifPresent(v -> requestBody.put("limit", v));
 
-        requestBody.put("limit", runContext.render(this.limit).as(Integer.class).orElseThrow());
+        Optional<String> renderedAfter =  runContext.render(this.after).as(String.class);
+            renderedAfter.ifPresent(v -> requestBody.put("after", v));
 
-        if (after != null) {
-            String afterValue = runContext.render(this.after).as(String.class).orElse(null);
-            if (afterValue != null && !afterValue.isEmpty()) {
-                requestBody.put("after", afterValue);
-            }
-        }
-
-        if (runContext.render(sorts).asList(Map.class) != null) {
-            requestBody.put("sorts", runContext.render(this.sorts).asList(Map.class));
-        }
+        Optional.ofNullable(runContext.render(this.sorts).asList(Map.class))
+            .ifPresent(v -> requestBody.put("sorts", v));
 
         URI uri = URI.create(buildHubspotURL() + "/search");
 

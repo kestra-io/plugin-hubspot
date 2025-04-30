@@ -8,7 +8,6 @@ import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.runners.RunContext;
 import io.kestra.plugin.hubspot.AbstractUpdateTask;
 import io.kestra.plugin.hubspot.HubspotResponse;
-import io.kestra.plugin.hubspot.model.CompanyRequest;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
@@ -38,13 +37,16 @@ import java.util.Map;
                 id: hubspot_companies_update
                 namespace: company.team
 
+                inputs:
+                  - id: company_id
+                    type: STRING
+
                 tasks:
                   - id: update_company
                     type: io.kestra.plugin.hubspot.companies.Update
                     apiKey: my_api_key
                     companyId: "{{ inputs.company_id }}"
                     name: "Updated Company Name"
-                    industry: "TECHNOLOGY"
                     additionalProperties:
                       city: "New York"
                       state: "NY"

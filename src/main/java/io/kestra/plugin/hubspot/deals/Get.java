@@ -30,15 +30,17 @@ import lombok.experimental.SuperBuilder;
                 id: hubspot_deals_get
                 namespace: company.team
 
+                inputs:
+                  - id: deal_id
+                    type: STRING
+
                 tasks:
                   - id: get_company
                     type: io.kestra.plugin.hubspot.deals.Get
                     apiKey: my_api_key
-                    companyId: "{{ inputs.company_id }}"
+                    companyId: "{{ inputs.deal_id }}"
                     properties:
                       - name
-                      - domain
-                      - industry
                 """
         )
     }
@@ -48,14 +50,14 @@ public class Get extends AbstractGetTask implements RunnableTask<AbstractGetTask
     public static final String HUBSPOT_OBJECT_ENDPOINT = "/crm/v3/objects/deals";
 
     @Schema(
-        title = "Company ID"
+        title = "Deal ID"
     )
     @NotNull
-    private Property<String> companyId;
+    private Property<String> dealId;
 
     @Override
     public Output run(RunContext runContext) throws Exception {
-        return super.run(runContext);
+        return super.run(runContext, runContext.render(dealId).as(String.class).orElseThrow());
     }
 
     @Override

@@ -8,7 +8,6 @@ import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.runners.RunContext;
 import io.kestra.plugin.hubspot.AbstractUpdateTask;
 import io.kestra.plugin.hubspot.HubspotResponse;
-import io.kestra.plugin.hubspot.model.ContactRequest;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
@@ -28,26 +27,27 @@ import java.util.Map;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Updates a HubSpot company."
+    title = "Updates a HubSpot contact."
 )
 @Plugin(
     examples = {
         @Example(
             full = true,
             code = """
-                id: hubspot_companies_update
+                id: hubspot_contacts_update
                 namespace: company.team
+
+                inputs:
+                  - id: contact_id
+                    type: STRING
 
                 tasks:
                   - id: update_company
-                    type: io.kestra.plugin.hubspot.companies.Update
+                    type: io.kestra.plugin.hubspot.contacts.Update
                     apiKey: my_api_key
-                    companyId: "{{ inputs.company_id }}"
-                    name: "Updated Company Name"
-                    industry: "TECHNOLOGY"
-                    additionalProperties:
-                      city: "New York"
-                      state: "NY"
+                    contactId: "{{ inputs.contact_id }}"
+                    firstName: "John"
+                    lastName: "Doe"
                 """
         )
     }
@@ -66,7 +66,6 @@ public class Update extends AbstractUpdateTask implements RunnableTask<AbstractU
         title = "Contact email",
         description = "The email address of the contact (required)"
     )
-    @NotNull
     private Property<String> email;
 
     @Schema(
@@ -88,11 +87,6 @@ public class Update extends AbstractUpdateTask implements RunnableTask<AbstractU
         title = "Job title"
     )
     private Property<String> jobTitle;
-
-    @Schema(
-        title = "Company name"
-    )
-    private Property<String> company;
 
     @Schema(
         title = "Lifecycle stage",
@@ -123,8 +117,6 @@ public class Update extends AbstractUpdateTask implements RunnableTask<AbstractU
         runContext.render(this.phone).as(String.class).ifPresent(request::setPhone);
 
         runContext.render(this.jobTitle).as(String.class).ifPresent(request::setJobTitle);
-
-        runContext.render(this.company).as(String.class).ifPresent(request::setCompany);
 
         runContext.render(this.lifecycleStage).as(String.class).ifPresent(request::setLifecycleStage);
 

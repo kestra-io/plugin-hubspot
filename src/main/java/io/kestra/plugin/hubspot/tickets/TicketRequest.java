@@ -1,4 +1,4 @@
-package io.kestra.plugin.hubspot.model;
+package io.kestra.plugin.hubspot.tickets;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;

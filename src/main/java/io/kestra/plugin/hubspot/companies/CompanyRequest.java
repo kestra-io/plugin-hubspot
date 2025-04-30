@@ -1,4 +1,4 @@
-package io.kestra.plugin.hubspot.model;
+package io.kestra.plugin.hubspot.companies;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

@@ -8,7 +8,6 @@ import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.runners.RunContext;
 import io.kestra.plugin.hubspot.AbstractCreateTask;
 import io.kestra.plugin.hubspot.HubspotResponse;
-import io.kestra.plugin.hubspot.model.CompanyRequest;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
@@ -28,7 +27,7 @@ import java.util.Map;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Create a HubSpot company."
+    title = "Create a HubSpot company. [Learn more](https://developers.hubspot.com/docs/reference/api/crm/objects/companies)"
 )
 @Plugin(
     examples = {
@@ -89,7 +88,6 @@ public class Create extends AbstractCreateTask implements RunnableTask<AbstractC
 
     @Override
     public Output run(RunContext runContext) throws Exception {
-        Logger logger = runContext.logger();
 
         CompanyRequest request = new CompanyRequest();
 

@@ -30,6 +30,10 @@ import lombok.experimental.SuperBuilder;
                 id: hubspot_companies_get
                 namespace: company.team
 
+                inputs:
+                  - id: company_id
+                    type: STRING
+
                 tasks:
                   - id: get_company
                     type: io.kestra.plugin.hubspot.companies.Get
@@ -55,7 +59,7 @@ public class Get extends AbstractGetTask implements RunnableTask<AbstractGetTask
 
     @Override
     public Output run(RunContext runContext) throws Exception {
-        return super.run(runContext);
+        return super.run(runContext, runContext.render(companyId).as(String.class).orElseThrow());
     }
 
     @Override

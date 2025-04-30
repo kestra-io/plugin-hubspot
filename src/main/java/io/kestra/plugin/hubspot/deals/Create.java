@@ -8,7 +8,6 @@ import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.runners.RunContext;
 import io.kestra.plugin.hubspot.AbstractCreateTask;
 import io.kestra.plugin.hubspot.HubspotResponse;
-import io.kestra.plugin.hubspot.model.DealRequest;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
@@ -28,7 +27,7 @@ import java.util.Map;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Create a HubSpot deal."
+    title = "Create a HubSpot deal. [Learn more](https://developers.hubspot.com/docs/reference/api/crm/objects/deals)"
 )
 @Plugin(
     examples = {
@@ -48,11 +47,6 @@ import java.util.Map;
                     amount: 50000
                     closeDate: "2024-12-31"
                     dealType: "new_business"
-                    associatedCompanyIds:
-                      - 789
-                    associatedContactIds:
-                      - 456
-                      - 457
                     additionalProperties:
                       probability: 0.75
                       notes: "Large enterprise opportunity"

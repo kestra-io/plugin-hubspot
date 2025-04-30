@@ -20,23 +20,13 @@ import java.util.List;
 public abstract class AbstractGetTask extends HubspotConnection {
 
     @Schema(
-        title = "Company ID"
-    )
-    @NotNull
-    private Property<String> companyId;
-
-    @Schema(
         title = "Specific properties to include in the response",
         description = "Leave empty to get all properties"
     )
     private Property<List<String>> properties;
 
-    public Output run(RunContext runContext) throws Exception {
-        Logger logger = runContext.logger();
-
-        String companyIdValue = runContext.render(this.companyId).as(String.class).orElseThrow();
-
-        StringBuilder uriBuilder = new StringBuilder(buildHubspotURL() + "/" + companyIdValue);
+    public Output run(RunContext runContext, String recordId) throws Exception {
+        StringBuilder uriBuilder = new StringBuilder(buildHubspotURL() + "/" + recordId);
 
         List<String> renderedProperties = runContext.render(properties).asList(String.class);
 

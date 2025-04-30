@@ -32,15 +32,8 @@ import lombok.experimental.SuperBuilder;
                   - id: search_contacts
                     type: io.kestra.plugin.hubspot.contacts.Search
                     apiKey: my_api_key
-                    filterGroups:
-                      - filters:
-                          - propertyName: "industry"
-                            operator: "EQ"
-                            value: "TECHNOLOGY"
                     properties:
-                      - name
-                      - domain
-                      - industry
+                      - email
                     limit: 10
                     sorts:
                       - propertyName: "createdate"

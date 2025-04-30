@@ -30,15 +30,17 @@ import lombok.experimental.SuperBuilder;
                 id: hubspot_contacts_get
                 namespace: company.team
 
+                inputs:
+                  - id: contact_id
+                    type: STRING
+
                 tasks:
                   - id: get_company
                     type: io.kestra.plugin.hubspot.contacts.Get
                     apiKey: my_api_key
-                    companyId: "{{ inputs.company_id }}"
+                    companyId: "{{ inputs.contact_id }}"
                     properties:
-                      - name
-                      - domain
-                      - industry
+                      - email
                 """
                 )
         }
@@ -48,14 +50,14 @@ public class Get extends AbstractGetTask implements RunnableTask<AbstractGetTask
     public static final String HUBSPOT_OBJECT_ENDPOINT = "/crm/v3/objects/contacts";
 
     @Schema(
-            title = "Company ID"
+            title = "Contact ID"
     )
     @NotNull
-    private Property<String> companyId;
+    private Property<String> contactId;
 
     @Override
     public Output run(RunContext runContext) throws Exception {
-        return super.run(runContext);
+        return super.run(runContext, runContext.render(contactId).as(String.class).orElseThrow());
     }
 
     @Override

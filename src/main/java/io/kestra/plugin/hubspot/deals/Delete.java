@@ -31,6 +31,10 @@ import lombok.experimental.SuperBuilder;
                 id: hubspot_deals_delete
                 namespace: company.team
 
+                inputs:
+                  - id: deal_id
+                    type: STRING
+
                 tasks:
                   - id: delete_deal
                     type: io.kestra.plugin.hubspot.deals.Delete

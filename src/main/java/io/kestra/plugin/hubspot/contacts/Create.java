@@ -8,7 +8,6 @@ import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.runners.RunContext;
 import io.kestra.plugin.hubspot.AbstractCreateTask;
 import io.kestra.plugin.hubspot.HubspotResponse;
-import io.kestra.plugin.hubspot.model.ContactRequest;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
@@ -28,7 +27,7 @@ import java.util.Map;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Create a HubSpot contact."
+    title = "Create a HubSpot contact. [Learn more](https://developers.hubspot.com/docs/reference/api/crm/objects/contacts)"
 )
 @Plugin(
     examples = {
@@ -47,12 +46,7 @@ import java.util.Map;
                     lastName: "Doe"
                     phone: "+1234567890"
                     jobTitle: "Software Engineer"
-                    company: "Acme Corporation"
                     lifecycleStage: "lead"
-                    additionalProperties:
-                      department: "Engineering"
-                      lead_source: "Website Form"
-                      country: "USA"
                 """
         )
     }
@@ -89,11 +83,6 @@ public class Create extends AbstractCreateTask implements RunnableTask<AbstractC
     private Property<String> jobTitle;
 
     @Schema(
-        title = "Company name"
-    )
-    private Property<String> company;
-
-    @Schema(
         title = "Lifecycle stage",
         description = "For example: subscriber, lead, customer, opportunity"
     )
@@ -120,8 +109,6 @@ public class Create extends AbstractCreateTask implements RunnableTask<AbstractC
         runContext.render(this.phone).as(String.class).ifPresent(request::setPhone);
 
         runContext.render(this.jobTitle).as(String.class).ifPresent(request::setJobTitle);
-
-        runContext.render(this.company).as(String.class).ifPresent(request::setCompany);
 
         runContext.render(this.lifecycleStage).as(String.class).ifPresent(request::setLifecycleStage);
 

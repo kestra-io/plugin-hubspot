@@ -56,16 +56,10 @@ public abstract class HubspotConnection extends Task {
     @PluginProperty(dynamic = true)
     private Property<String> oauthToken;
 
-    @Schema(
-        title = "Payload"
-    )
-    protected Property<String> payload;
-
     @Schema(title = "The HTTP client configuration.")
     HttpConfiguration options;
 
-    public <T> T makeCall(RunContext runContext, HttpRequest.HttpRequestBuilder requestBuilder, Class<T> responseType) throws Exception {
-        Logger logger = runContext.logger();
+    public <T> T makeCall(RunContext runContext, HttpRequest.HttpRequestBuilder requestBuilder, Class<T> responseType) throws Exception {Logger logger = runContext.logger();
 
         try (HttpClient client = new HttpClient(runContext,options)) {
 

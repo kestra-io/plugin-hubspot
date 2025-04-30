@@ -8,7 +8,6 @@ import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.runners.RunContext;
 import io.kestra.plugin.hubspot.AbstractUpdateTask;
 import io.kestra.plugin.hubspot.HubspotResponse;
-import io.kestra.plugin.hubspot.model.DealRequest;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
@@ -38,21 +37,18 @@ import java.util.Map;
                 id: hubspot_deals_create
                 namespace: company.team
 
+                inputs:
+                  - id: deal_id
+                    type: STRING
+
                 tasks:
                   - id: create_deal
                     type: io.kestra.plugin.hubspot.deals.Create
                     apiKey: my_api_key
+                    dealId: {{ inputs.deal_id }}
                     name: "Enterprise Software Deal"
-                    pipeline: 123456
-                    stage: "presentation_scheduled"
                     amount: 50000
                     closeDate: "2024-12-31"
-                    dealType: "new_business"
-                    associatedCompanyIds:
-                      - 789
-                    associatedContactIds:
-                      - 456
-                      - 457
                     additionalProperties:
                       probability: 0.75
                       notes: "Large enterprise opportunity"
