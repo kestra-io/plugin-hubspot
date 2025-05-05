@@ -51,6 +51,13 @@ public abstract class AbstractSearchTask extends HubspotConnection {
     )
     private Property<List<Map<String, String>>> sorts;
 
+    @Schema(
+        title = "Whether to fetch all records by paging through results",
+        description = "If true, continues fetching all pages until no more results. Default is true."
+    )
+    @Builder.Default
+    private Property<Boolean> fetchAllPages = Property.of(false);
+
     public Output run(RunContext runContext) throws Exception {
         Logger logger = runContext.logger();
 
@@ -96,7 +103,10 @@ public abstract class AbstractSearchTask extends HubspotConnection {
         }
 
         Map<String,Object> nextPageToken = response.getPaging() != null ? response.getPaging().getNext() : null;
-        while (nextPageToken != null) {
+
+        boolean shouldFetchAll = runContext.render(this.fetchAllPages).as(Boolean.class).orElse(false);
+
+        while (shouldFetchAll && nextPageToken != null) {
             requestBody.put("after", nextPageToken.get("after"));
             requestBodyString = mapper.writeValueAsString(requestBody);
 
