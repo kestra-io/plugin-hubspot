@@ -27,7 +27,8 @@ import java.util.Map;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Create a HubSpot deal."
+    title = "Update a HubSpot deal.",
+    description = "This task includes the dealId to update the existing deal in Hubspot."
 )
 @Plugin(
     examples = {
@@ -43,7 +44,7 @@ import java.util.Map;
 
                 tasks:
                   - id: create_deal
-                    type: io.kestra.plugin.hubspot.deals.Create
+                    type: io.kestra.plugin.hubspot.deals.Update
                     apiKey: my_api_key
                     dealId: {{ inputs.deal_id }}
                     name: "Enterprise Software Deal"
