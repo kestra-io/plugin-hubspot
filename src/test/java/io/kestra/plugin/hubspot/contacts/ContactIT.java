@@ -36,10 +36,10 @@ public class ContactIT extends AbstractTaskIT {
         RunContext runContext = runContextFactory.of();
 
         Create task = Create.builder()
-            .apiKey(Property.of(getApiKey()))
-            .email(Property.of(System.currentTimeMillis() + "example@example.com"))
-            .firstName(Property.of("example first name"))
-            .lastName(Property.of("example last name"))
+            .apiKey(Property.ofValue(getApiKey()))
+            .email(Property.ofValue(System.currentTimeMillis() + "example@example.com"))
+            .firstName(Property.ofValue("example first name"))
+            .lastName(Property.ofValue("example last name"))
             .build();
 
         Create.Output runOutput = task.run(runContext);
@@ -54,8 +54,8 @@ public class ContactIT extends AbstractTaskIT {
         RunContext runContext = runContextFactory.of();
 
         Search task = Search.builder()
-            .apiKey(Property.of(getApiKey()))
-            .query(Property.of("example first name"))
+            .apiKey(Property.ofValue(getApiKey()))
+            .query(Property.ofValue("example first name"))
             .build();
 
         Search.Output runOutput = task.run(runContext);
@@ -71,9 +71,9 @@ public class ContactIT extends AbstractTaskIT {
         assertThat(contactId, is(notNullValue()));
 
         Update task = Update.builder()
-            .apiKey(Property.of(getApiKey()))
-            .contactId(Property.of(String.valueOf(contactId)))
-            .firstName(Property.of("updated first name"))
+            .apiKey(Property.ofValue(getApiKey()))
+            .contactId(Property.ofValue(String.valueOf(contactId)))
+            .firstName(Property.ofValue("updated first name"))
             .build();
 
         Update.Output runOutput = task.run(runContext);
@@ -90,8 +90,8 @@ public class ContactIT extends AbstractTaskIT {
         assertThat(contactId, is(notNullValue()));
 
         Delete task = Delete.builder()
-            .apiKey(Property.of(getApiKey()))
-            .contactId(Property.of(String.valueOf(contactId)))
+            .apiKey(Property.ofValue(getApiKey()))
+            .contactId(Property.ofValue(String.valueOf(contactId)))
             .build();
 
         VoidOutput runOutput = task.run(runContext);
@@ -103,8 +103,8 @@ public class ContactIT extends AbstractTaskIT {
         RunContext runContext = runContextFactory.of();
 
         Search task = Search.builder()
-            .apiKey(Property.of(getApiKey()))
-            .query(Property.of("example first name"))
+            .apiKey(Property.ofValue(getApiKey()))
+            .query(Property.ofValue("example first name"))
             .build();
 
         Search.Output runOutput = task.run(runContext);

@@ -44,8 +44,8 @@ public class CompanyIT extends AbstractTaskIT {
         RunContext runContext = runContextFactory.of();
 
         Search task = Search.builder()
-            .apiKey(Property.of(getApiKey()))
-            .query(Property.of("example.co"))
+            .apiKey(Property.ofValue(getApiKey()))
+            .query(Property.ofValue("example.co"))
             .build();
 
         Search.Output runOutput = task.run(runContext);
@@ -61,10 +61,10 @@ public class CompanyIT extends AbstractTaskIT {
         assertThat(companyId, is(notNullValue()));
 
         Update task = Update.builder()
-            .apiKey(Property.of(getApiKey()))
-            .companyId(Property.of(String.valueOf(companyId)))
-            .name(Property.of("Example new company"))
-            .domain(Property.of("new.example.co"))
+            .apiKey(Property.ofValue(getApiKey()))
+            .companyId(Property.ofValue(String.valueOf(companyId)))
+            .name(Property.ofValue("Example new company"))
+            .domain(Property.ofValue("new.example.co"))
             .build();
 
         Update.Output runOutput = task.run(runContext);
@@ -79,8 +79,8 @@ public class CompanyIT extends AbstractTaskIT {
         RunContext runContext = runContextFactory.of();
 
         Search task = Search.builder()
-            .apiKey(Property.of(getApiKey()))
-            .query(Property.of("Example new company"))
+            .apiKey(Property.ofValue(getApiKey()))
+            .query(Property.ofValue("Example new company"))
             .build();
 
         Search.Output runOutput = task.run(runContext);
@@ -96,8 +96,8 @@ public class CompanyIT extends AbstractTaskIT {
         assertThat(companyId, is(notNullValue()));
 
         Delete task = Delete.builder()
-            .apiKey(Property.of(getApiKey()))
-            .companyId(Property.of(String.valueOf(companyId)))
+            .apiKey(Property.ofValue(getApiKey()))
+            .companyId(Property.ofValue(String.valueOf(companyId)))
             .build();
 
         VoidOutput runOutput = task.run(runContext);
@@ -115,9 +115,9 @@ public class CompanyIT extends AbstractTaskIT {
         assertThat(runOutput2.getId(), is(notNullValue()));
 
         Search task = Search.builder()
-            .apiKey(Property.of(getApiKey()))
-            .query(Property.of("example.co"))
-            .limit(Property.of(1))
+            .apiKey(Property.ofValue(getApiKey()))
+            .query(Property.ofValue("example.co"))
+            .limit(Property.ofValue(1))
             .build();
 
         Search.Output output = task.run(runContext);
@@ -142,10 +142,10 @@ public class CompanyIT extends AbstractTaskIT {
         assertThat(runOutput2.getId(), is(notNullValue()));
 
         Search task = Search.builder()
-            .apiKey(Property.of(getApiKey()))
-            .query(Property.of("example.co"))
-            .limit(Property.of(10))
-            .fetchAllPages(Property.of(true))
+            .apiKey(Property.ofValue(getApiKey()))
+            .query(Property.ofValue("example.co"))
+            .limit(Property.ofValue(10))
+            .fetchAllPages(Property.ofValue(true))
             .build();
 
         Search.Output output = task.run(runContext);
@@ -157,9 +157,9 @@ public class CompanyIT extends AbstractTaskIT {
     private Create.Output createCompany(String name, String domain) throws Exception {
         RunContext ctx = runContextFactory.of();
         Create task = Create.builder()
-            .apiKey(Property.of(getApiKey()))
-            .name(Property.of(name))
-            .domain(Property.of(domain))
+            .apiKey(Property.ofValue(getApiKey()))
+            .name(Property.ofValue(name))
+            .domain(Property.ofValue(domain))
             .build();
         return task.run(ctx);
     }
@@ -167,8 +167,8 @@ public class CompanyIT extends AbstractTaskIT {
     private void deleteCompany(Long id) throws Exception {
         RunContext ctx = runContextFactory.of();
         Delete task = Delete.builder()
-            .apiKey(Property.of(getApiKey()))
-            .companyId(Property.of(String.valueOf(id)))
+            .apiKey(Property.ofValue(getApiKey()))
+            .companyId(Property.ofValue(String.valueOf(id)))
             .build();
         task.run(ctx);
     }

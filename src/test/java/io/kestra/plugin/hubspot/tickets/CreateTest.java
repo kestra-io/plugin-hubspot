@@ -28,10 +28,10 @@ class CreateTest extends AbstractTaskIT {
         RunContext runContext = runContextFactory.of();
 
         Create task = Create.builder()
-            .apiKey(Property.of(getApiKey()))
-            .subject(Property.of("This is a test"))
-            .content(Property.of("This is a test from kestra unit tests"))
-            .stage(Property.of(4))
+            .apiKey(Property.ofValue(getApiKey()))
+            .subject(Property.ofValue("This is a test"))
+            .content(Property.ofValue("This is a test from kestra unit tests"))
+            .stage(Property.ofValue(4))
             .build();
 
         Create.Output runOutput = task.run(runContext);

@@ -101,7 +101,7 @@ public class Create extends AbstractCreateTask implements RunnableTask<AbstractC
         title = "Ticket pipeline stage"
     )
     @Builder.Default
-    private Property<Integer> stage = Property.of(1);
+    private Property<Integer> stage = Property.ofValue(1);
 
     @Schema(
         title = "Ticket priority",
