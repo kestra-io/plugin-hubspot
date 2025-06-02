@@ -36,10 +36,10 @@ public class DealIT extends AbstractTaskIT {
         RunContext runContext = runContextFactory.of();
 
         Create task = Create.builder()
-            .apiKey(Property.of(getApiKey()))
-            .name(Property.of("Example deal"))
-            .stage(Property.of("qualifiedtobuy"))
-            .pipeline(Property.of("default"))
+            .apiKey(Property.ofValue(getApiKey()))
+            .name(Property.ofValue("Example deal"))
+            .stage(Property.ofValue("qualifiedtobuy"))
+            .pipeline(Property.ofValue("default"))
             .build();
 
         Create.Output runOutput = task.run(runContext);
@@ -54,8 +54,8 @@ public class DealIT extends AbstractTaskIT {
         RunContext runContext = runContextFactory.of();
 
         Search task = Search.builder()
-            .apiKey(Property.of(getApiKey()))
-            .query(Property.of("Example deal"))
+            .apiKey(Property.ofValue(getApiKey()))
+            .query(Property.ofValue("Example deal"))
             .build();
 
         Search.Output runOutput = task.run(runContext);
@@ -71,9 +71,9 @@ public class DealIT extends AbstractTaskIT {
         assertThat(dealId, is(notNullValue()));
 
         Update task = Update.builder()
-            .apiKey(Property.of(getApiKey()))
-            .dealId(Property.of(String.valueOf(dealId)))
-            .name(Property.of("updated deal name"))
+            .apiKey(Property.ofValue(getApiKey()))
+            .dealId(Property.ofValue(String.valueOf(dealId)))
+            .name(Property.ofValue("updated deal name"))
             .build();
 
         Update.Output runOutput = task.run(runContext);
@@ -88,8 +88,8 @@ public class DealIT extends AbstractTaskIT {
         RunContext runContext = runContextFactory.of();
 
         Search task = Search.builder()
-            .apiKey(Property.of(getApiKey()))
-            .query(Property.of("updated deal name"))
+            .apiKey(Property.ofValue(getApiKey()))
+            .query(Property.ofValue("updated deal name"))
             .build();
 
         Search.Output runOutput = task.run(runContext);
@@ -105,8 +105,8 @@ public class DealIT extends AbstractTaskIT {
         assertThat(dealId, is(notNullValue()));
 
         Delete task = Delete.builder()
-            .apiKey(Property.of(getApiKey()))
-            .dealId(Property.of(String.valueOf(dealId)))
+            .apiKey(Property.ofValue(getApiKey()))
+            .dealId(Property.ofValue(String.valueOf(dealId)))
             .build();
 
         VoidOutput runOutput = task.run(runContext);
