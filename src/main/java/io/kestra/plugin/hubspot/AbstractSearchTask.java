@@ -40,7 +40,7 @@ public abstract class AbstractSearchTask extends HubspotConnection {
         description = "Default is 10, maximum is 100"
     )
     @Builder.Default
-    private Property<Integer> limit = Property.of(10);
+    private Property<Integer> limit = Property.ofValue(10);
 
     @Schema(
         title = "Pagination token for fetching the next page of results"
@@ -57,7 +57,7 @@ public abstract class AbstractSearchTask extends HubspotConnection {
         description = "If true, continues fetching all pages until no more results. Default is true."
     )
     @Builder.Default
-    private Property<Boolean> fetchAllPages = Property.of(false);
+    private Property<Boolean> fetchAllPages = Property.ofValue(false);
 
     public Output run(RunContext runContext) throws Exception {
         Logger logger = runContext.logger();
