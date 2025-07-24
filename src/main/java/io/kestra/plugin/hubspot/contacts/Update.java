@@ -48,6 +48,8 @@ import java.util.Map;
                     contactId: "{{ inputs.contact_id }}"
                     firstName: "John"
                     lastName: "Doe"
+                    additionalProperties:
+                      hs_role: project_management
                 """
         )
     }

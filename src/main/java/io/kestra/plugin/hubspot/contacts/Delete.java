@@ -26,8 +26,8 @@ import lombok.experimental.SuperBuilder;
 @Plugin(
         examples = {
                 @Example(
-                        full = true,
-                        code = """
+                full = true,
+                code = """
                 id: hubspot_contacts_delete
                 namespace: contact.team
 

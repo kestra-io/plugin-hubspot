@@ -51,8 +51,7 @@ import java.util.Map;
                     amount: 50000
                     closeDate: "2024-12-31"
                     additionalProperties:
-                      probability: 0.75
-                      notes: "Large enterprise opportunity"
+                      description: Important Enterprise Deal to close
                 """
         )
     }

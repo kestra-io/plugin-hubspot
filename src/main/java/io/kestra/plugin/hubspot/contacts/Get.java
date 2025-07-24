@@ -25,8 +25,8 @@ import lombok.experimental.SuperBuilder;
 @Plugin(
         examples = {
                 @Example(
-                        full = true,
-                        code = """
+                full = true,
+                code = """
                 id: hubspot_contacts_get
                 namespace: company.team
 
