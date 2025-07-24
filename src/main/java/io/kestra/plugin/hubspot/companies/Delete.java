@@ -31,10 +31,14 @@ import lombok.experimental.SuperBuilder;
                 id: hubspot_companies_delete
                 namespace: company.team
 
+                inputs:
+                  - id: company_id
+                    type: STRING
+
                 tasks:
                   - id: delete_company
                     type: io.kestra.plugin.hubspot.companies.Delete
-                    apiKey: my_api_key
+                    apiKey: "{{ secret('HUBSPOT_API_KEY') }}"
                     companyId: "{{ inputs.company_id }}"
                 """
                 )

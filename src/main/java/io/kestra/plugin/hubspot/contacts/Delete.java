@@ -31,10 +31,14 @@ import lombok.experimental.SuperBuilder;
                 id: hubspot_contacts_delete
                 namespace: contact.team
 
+                inputs:
+                  - id: contact_id
+                    type: STRING
+
                 tasks:
                   - id: delete_contact
                     type: io.kestra.plugin.hubspot.contacts.Delete
-                    apiKey: my_api_key
+                    apiKey: "{{ secret('HUBSPOT_API_KEY') }}"
                     contactId: "{{ inputs.contact_id }}"
                 """
                 )

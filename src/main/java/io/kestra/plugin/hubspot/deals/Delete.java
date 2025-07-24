@@ -38,7 +38,7 @@ import lombok.experimental.SuperBuilder;
                 tasks:
                   - id: delete_deal
                     type: io.kestra.plugin.hubspot.deals.Delete
-                    apiKey: my_api_key
+                    apiKey: "{{ secret('HUBSPOT_API_KEY') }}"
                     dealId: "{{ inputs.deal_id }}"
                 """
         )

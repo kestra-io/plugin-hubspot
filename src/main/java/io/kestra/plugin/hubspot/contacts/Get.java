@@ -20,7 +20,7 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @NoArgsConstructor
 @Schema(
-        title = "Gets a HubSpot company by ID."
+        title = "Gets a HubSpot contacts by ID."
 )
 @Plugin(
         examples = {
@@ -35,10 +35,10 @@ import lombok.experimental.SuperBuilder;
                     type: STRING
 
                 tasks:
-                  - id: get_company
+                  - id: get_contact
                     type: io.kestra.plugin.hubspot.contacts.Get
-                    apiKey: my_api_key
-                    companyId: "{{ inputs.contact_id }}"
+                    apiKey: "{{ secret('HUBSPOT_API_KEY') }}"
+                    contactId: "{{ inputs.contact_id }}"
                     properties:
                       - email
                 """

@@ -31,7 +31,7 @@ import lombok.experimental.SuperBuilder;
                 tasks:
                   - id: search_deals
                     type: io.kestra.plugin.hubspot.deals.Search
-                    apiKey: my_api_key
+                    apiKey: "{{ secret('HUBSPOT_API_KEY') }}"
                     properties:
                       - name
                     limit: 10

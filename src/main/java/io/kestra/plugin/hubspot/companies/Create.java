@@ -27,7 +27,8 @@ import java.util.Map;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Create a HubSpot company. [Learn more](https://developers.hubspot.com/docs/reference/api/crm/objects/companies)"
+    title = "Create a HubSpot company.",
+    description =  "Check out the [Hubspot API documentation](https://developers.hubspot.com/docs/reference/api/crm/objects/companies) to learn more."
 )
 @Plugin(
     examples = {
@@ -40,12 +41,12 @@ import java.util.Map;
                 tasks:
                   - id: create_company
                     type: io.kestra.plugin.hubspot.companies.Create
-                    apiKey: my_api_key
+                    apiKey: "{{ secret('HUBSPOT_API_KEY') }}"
                     name: "Acme Corporation"
                     domain: "acme.com"
                     companyDescription: "Leading provider of innovative solutions"
                     industry: "ACCOUNTING"
-                    type: "PARTNER"
+                    companyType: "PARTNER"
                     additionalProperties:
                       city: "San Francisco"
                       state: "CA"
