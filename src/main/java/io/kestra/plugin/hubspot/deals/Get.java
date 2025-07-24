@@ -40,7 +40,8 @@ import lombok.experimental.SuperBuilder;
                     apiKey: "{{ secret('HUBSPOT_API_KEY') }}"
                     dealId: "{{ inputs.deal_id }}"
                     properties:
-                      - name
+                      - dealname
+                      - amount
                 """
         )
     }
