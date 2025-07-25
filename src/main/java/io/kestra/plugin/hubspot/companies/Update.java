@@ -44,7 +44,7 @@ import java.util.Map;
                 tasks:
                   - id: update_company
                     type: io.kestra.plugin.hubspot.companies.Update
-                    apiKey: my_api_key
+                    apiKey: "{{ secret('HUBSPOT_API_KEY') }}"
                     companyId: "{{ inputs.company_id }}"
                     name: "Updated Company Name"
                     additionalProperties:

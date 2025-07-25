@@ -31,7 +31,7 @@ import lombok.experimental.SuperBuilder;
                 tasks:
                   - id: search_companies
                     type: io.kestra.plugin.hubspot.companies.Search
-                    apiKey: my_api_key
+                    apiKey: "{{ secret('HUBSPOT_API_KEY') }}"
                     properties:
                       - name
                       - domain

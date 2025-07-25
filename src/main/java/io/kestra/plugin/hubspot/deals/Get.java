@@ -20,7 +20,7 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Gets a HubSpot company by ID."
+    title = "Gets a HubSpot deal by ID."
 )
 @Plugin(
     examples = {
@@ -35,12 +35,13 @@ import lombok.experimental.SuperBuilder;
                     type: STRING
 
                 tasks:
-                  - id: get_company
+                  - id: get_deals
                     type: io.kestra.plugin.hubspot.deals.Get
-                    apiKey: my_api_key
-                    companyId: "{{ inputs.deal_id }}"
+                    apiKey: "{{ secret('HUBSPOT_API_KEY') }}"
+                    dealId: "{{ inputs.deal_id }}"
                     properties:
-                      - name
+                      - dealname
+                      - amount
                 """
         )
     }

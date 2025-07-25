@@ -41,16 +41,15 @@ import java.util.Map;
                 tasks:
                   - id: create_deal
                     type: io.kestra.plugin.hubspot.deals.Create
-                    apiKey: my_api_key
+                    apiKey: "{{ secret('HUBSPOT_API_KEY') }}"
                     name: "Enterprise Software Deal"
-                    pipeline: 123456
-                    stage: "presentation_scheduled"
+                    pipeline: "default"
+                    stage: "presentationscheduled"
                     amount: 50000
                     closeDate: "2024-12-31"
-                    dealType: "new_business"
+                    dealType: "newbusiness"
                     additionalProperties:
-                      probability: 0.75
-                      notes: "Large enterprise opportunity"
+                      description: Important Enterprise Deal
                 """
         )
     }

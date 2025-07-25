@@ -27,7 +27,8 @@ import java.util.Map;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Create a HubSpot contact. [Learn more](https://developers.hubspot.com/docs/reference/api/crm/objects/contacts)"
+    title = "Create a HubSpot contact.",
+    description =  "Check out the [Hubspot API documentation](https://developers.hubspot.com/docs/reference/api/crm/objects/contacts) to learn more."
 )
 @Plugin(
     examples = {
@@ -40,7 +41,7 @@ import java.util.Map;
                 tasks:
                   - id: create_contact
                     type: io.kestra.plugin.hubspot.contacts.Create
-                    apiKey: my_api_key
+                    apiKey: "{{ secret('HUBSPOT_API_KEY') }}"
                     email: "john.doe@example.com"
                     firstName: "John"
                     lastName: "Doe"

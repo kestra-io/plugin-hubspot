@@ -31,7 +31,7 @@ import lombok.experimental.SuperBuilder;
                 tasks:
                   - id: search_contacts
                     type: io.kestra.plugin.hubspot.contacts.Search
-                    apiKey: my_api_key
+                    apiKey: "{{ secret('HUBSPOT_API_KEY') }}"
                     properties:
                       - email
                     limit: 10

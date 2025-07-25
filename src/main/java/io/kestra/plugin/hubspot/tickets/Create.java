@@ -35,7 +35,7 @@ import java.util.List;
                 tasks:
                   - id: create_ticket
                     type: io.kestra.plugin.hubspot.tickets.Create
-                    apiKey: my_api_key
+                    apiKey: "{{ secret('HUBSPOT_API_KEY') }}"
                     subject: "Increased 5xx in Demo Service"
                     content: "The number of 5xx has increased beyond the threshold for Demo service."
                     stage: 3
@@ -52,7 +52,7 @@ import java.util.List;
                 tasks:
                   - id: create_ticket
                     type: io.kestra.plugin.hubspot.tickets.Create
-                    apiKey: my_api_key
+                    apiKey: "{{ secret('HUBSPOT_API_KEY') }}"
                     subject: Workflow failed
                     content: "{{ execution.id }} has failed on {{ taskrun.startDate }}"
                     stage: 3
