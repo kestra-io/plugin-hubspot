@@ -36,7 +36,7 @@
 <p align="center" style="color:grey;"><i>Get started with Kestra in 4 minutes.</i></p>
 
 
-# Kestra Plugin Template
+# Kestra Plugin HubSpot
 
 > Plugin to interact with HubSpot
 
