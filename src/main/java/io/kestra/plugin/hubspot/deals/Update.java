@@ -28,7 +28,7 @@ import java.util.Map;
 @NoArgsConstructor
 @Schema(
     title = "Update a HubSpot deal.",
-    description = "This task includes the dealId to update the existing deal in Hubspot."
+    description = "This task includes the dealId to update the existing deal in HubSpot."
 )
 @Plugin(
     examples = {

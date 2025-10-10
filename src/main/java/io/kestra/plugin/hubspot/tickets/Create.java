@@ -22,7 +22,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Create a Hubspot ticket."
+    title = "Create a HubSpot ticket."
 )
 @Plugin(
     examples = {
@@ -153,7 +153,7 @@ public class Create extends AbstractCreateTask implements RunnableTask<AbstractC
 
         URI fileURI = store(runContext, List.of(response.getProperties()));
 
-        logger.info("Created hubspot ticket: {}", response);
+        logger.info("Created HubSpot ticket: {}", response);
 
         return Output.builder()
             .id(response.getId())
