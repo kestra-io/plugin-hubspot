@@ -20,7 +20,7 @@ public abstract class AbstractSearchTask extends HubspotConnection {
 
     @Schema(
         title = "Search all default text properties in records of the specified object.",
-        description = "To learn more, check out the [Hubspot API documentation](https://developers.hubspot.com/docs/api/crm/search)."
+        description = "To learn more, check out the [HubSpot API documentation](https://developers.hubspot.com/docs/api/crm/search)."
     )
     private Property<String> query;
 

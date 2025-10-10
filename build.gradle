@@ -29,7 +29,7 @@ java {
 }
 
 group "io.kestra.plugin"
-description 'Plugin Hubspot for Kestra'
+description 'Plugin HubSpot for Kestra'
 
 tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
@@ -170,7 +170,7 @@ jar {
     manifest {
         attributes(
                 "X-Kestra-Name": project.name,
-                "X-Kestra-Title": "Hubspot",
+                "X-Kestra-Title": "HubSpot",
                 "X-Kestra-Group": project.group + ".hubspot",
                 "X-Kestra-Description": project.description,
                 "X-Kestra-Version": project.version

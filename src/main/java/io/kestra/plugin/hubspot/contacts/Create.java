@@ -28,7 +28,7 @@ import java.util.Map;
 @NoArgsConstructor
 @Schema(
     title = "Create a HubSpot contact.",
-    description =  "Check out the [Hubspot API documentation](https://developers.hubspot.com/docs/reference/api/crm/objects/contacts) to learn more."
+    description =  "Check out the [HubSpot API documentation](https://developers.hubspot.com/docs/reference/api/crm/objects/contacts) to learn more."
 )
 @Plugin(
     examples = {
