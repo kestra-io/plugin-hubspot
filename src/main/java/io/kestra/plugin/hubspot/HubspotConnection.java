@@ -18,7 +18,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import reactor.core.publisher.Flux;
 
@@ -30,7 +29,6 @@ import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
-@Slf4j
 @SuperBuilder
 @ToString
 @EqualsAndHashCode
