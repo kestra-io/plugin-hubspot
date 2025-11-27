@@ -1,0 +1,8 @@
+group: io.kestra.plugin.hubspot.tickets
+name: "tickets"
+title: "Tickets"
+description: "This sub-group of plugins contains tasks for managing tickets using HubSpot API."
+body: ""
+videos: []
+createdBy: "Kestra Core Team"
+managedBy: "Kestra Core Team"
