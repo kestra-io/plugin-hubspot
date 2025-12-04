@@ -1,8 +1,8 @@
 group: io.kestra.plugin.hubspot.companies
 name: "companies"
 title: "Companies"
-description: "This sub-group of plugins contains tasks for managing companies using HubSpot API."
-body: ""
+description: "Tasks that create, update, search, and delete HubSpot companies."
+body: "Set your HubSpot token and company properties to create or update records, search with filters, or delete by ID, returning company payloads for CRM workflows."
 videos: []
 createdBy: "Kestra Core Team"
 managedBy: "Kestra Core Team"

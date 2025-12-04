@@ -1,8 +1,8 @@
 group: io.kestra.plugin.hubspot
 name: "hubspot"
 title: "HubSpot"
-description: "This sub-group of plugins contains tasks for using a HubSpot API."
-body: ""
+description: "Tasks that create, update, search, and delete HubSpot CRM objects."
+body: "Provide a HubSpot private app token and object details to manage contacts, companies, deals, and tickets, using search filters or property payloads and receiving the API responses for downstream automation."
 videos: []
 createdBy: "Kestra Core Team"
 managedBy: "Kestra Core Team"

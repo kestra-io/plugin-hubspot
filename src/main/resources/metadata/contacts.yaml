@@ -1,8 +1,8 @@
 group: io.kestra.plugin.hubspot.contacts
 name: "contacts"
 title: "Contacts"
-description: "This sub-group of plugins contains tasks for managing contacts using HubSpot API."
-body: ""
+description: "Tasks that create, update, search, and delete HubSpot contacts."
+body: "Use your HubSpot token with contact properties (emails, names, custom fields) to insert or update records, search by filters, and remove contacts by ID while capturing API responses for enrichment flows."
 videos: []
 createdBy: "Kestra Core Team"
 managedBy: "Kestra Core Team"
