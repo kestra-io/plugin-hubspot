@@ -1,6 +1,5 @@
 @PluginSubGroup(
     description = "This sub-group of plugins contains tasks for managing deals using HubSpot API.",
-    categories = PluginSubGroup.PluginCategory.OTHER,
     categories = {
         PluginSubGroup.PluginCategory.BUSINESS
     }
