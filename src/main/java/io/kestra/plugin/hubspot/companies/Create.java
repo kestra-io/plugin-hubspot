@@ -27,8 +27,8 @@ import java.util.Map;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Create a HubSpot company.",
-    description =  "Check out the [HubSpot API documentation](https://developers.hubspot.com/docs/reference/api/crm/objects/companies) to learn more."
+    title = "Create HubSpot company record",
+    description = "Creates a company via HubSpot CRM v3. Requires API key or OAuth token and persists returned properties to internal storage."
 )
 @Plugin(
     examples = {
@@ -60,30 +60,33 @@ public class Create extends AbstractCreateTask implements RunnableTask<AbstractC
 
     @Schema(
         title = "Company name",
-        description = "The name of the company (required)"
+        description = "Required company name."
     )
     @NotNull
     private Property<String> name;
 
     @Schema(
-        title = "Company domain"
+        title = "Company domain",
+        description = "Required primary company domain."
     )
     @NotNull
     private Property<String> domain;
 
     @Schema(
-        title = "Company companyDescription"
+        title = "Company description",
+        description = "Optional description text."
     )
     private Property<String> companyDescription;
 
     @Schema(
-        title = "Company industry"
+        title = "Company industry",
+        description = "HubSpot industry code (e.g., ACCOUNTING)."
     )
     private Property<String> industry;
 
     @Schema(
         title = "Company type",
-        description = "For example: Customer, Prospect, Partner"
+        description = "Optional HubSpot type value such as CUSTOMER, PROSPECT, or PARTNER."
     )
     private Property<String> companyType;
 

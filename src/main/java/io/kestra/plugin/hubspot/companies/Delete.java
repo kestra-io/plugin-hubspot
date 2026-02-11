@@ -21,7 +21,8 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @NoArgsConstructor
 @Schema(
-        title = "Deletes a company from HubSpot."
+        title = "Delete HubSpot company by ID",
+        description = "Deletes a company record via HubSpot CRM v3. Operation is irreversible; requires API key or OAuth token."
 )
 @Plugin(
     examples = {
@@ -49,7 +50,8 @@ public class Delete extends AbstractDeleteTask implements RunnableTask<VoidOutpu
     public static final String HUBSPOT_OBJECT_ENDPOINT = "/crm/v3/objects/companies";
 
     @Schema(
-            title = "Company ID"
+            title = "Company ID",
+            description = "Required HubSpot company record ID."
     )
     @NotNull
     private Property<String> companyId;

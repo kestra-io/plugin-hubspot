@@ -20,7 +20,8 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @NoArgsConstructor
 @Schema(
-        title = "Gets a HubSpot company by ID."
+        title = "Fetch HubSpot company by ID",
+        description = "Retrieves company properties via HubSpot CRM v3. Optionally restricts returned fields with `properties`."
 )
 @Plugin(
     examples = {
@@ -52,7 +53,8 @@ public class Get extends AbstractGetTask implements RunnableTask<AbstractGetTask
     public static final String HUBSPOT_OBJECT_ENDPOINT = "/crm/v3/objects/companies";
 
     @Schema(
-            title = "Company ID"
+            title = "Company ID",
+            description = "Required HubSpot company record ID."
     )
     @NotNull
     private Property<String> companyId;
