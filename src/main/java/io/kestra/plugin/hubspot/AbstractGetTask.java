@@ -21,7 +21,7 @@ public abstract class AbstractGetTask extends HubspotConnection {
 
     @Schema(
         title = "Specific properties to include in the response",
-        description = "Leave empty to get all properties"
+        description = "Optional list of property names. Leave empty to return all properties."
     )
     private Property<List<String>> properties;
 
@@ -61,7 +61,8 @@ public abstract class AbstractGetTask extends HubspotConnection {
         private Long id;
 
         @Schema(
-            title = "URI of the file "
+            title = "URI of stored properties",
+            description = "Internal storage URI containing the retrieved record properties."
         )
         private URI uri;
     }

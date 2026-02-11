@@ -18,7 +18,8 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @NoArgsConstructor
 @Schema(
-        title = "Searches for HubSpot companies based on filter criteria."
+        title = "Search HubSpot company records",
+        description = "Runs HubSpot CRM search on companies with optional query, filters, sorts, and property selection. Default limit is 10; set `fetchAllPages` to true to page through all results."
 )
 @Plugin(
     examples = {

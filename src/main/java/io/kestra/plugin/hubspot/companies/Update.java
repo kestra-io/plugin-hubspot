@@ -27,7 +27,8 @@ import java.util.Map;
 @Getter
 @NoArgsConstructor
 @Schema(
-        title = "Updates a HubSpot company."
+        title = "Update HubSpot company properties",
+        description = "PATCH an existing company via HubSpot CRM v3. Requires record ID and updates only provided fields; stores returned properties to internal storage."
 )
 @Plugin(
     examples = {
@@ -59,34 +60,39 @@ public class Update extends AbstractUpdateTask implements RunnableTask<AbstractU
     public static final String HUBSPOT_OBJECT_ENDPOINT = "/crm/v3/objects/companies";
 
     @Schema(
-            title = "Company ID"
+            title = "Company ID",
+            description = "Required HubSpot company record ID to update."
     )
     @NotNull
     private Property<String> companyId;
 
     @Schema(
-            title = "Company name"
+            title = "Company name",
+            description = "New company name; optional."
     )
     private Property<String> name;
 
     @Schema(
-            title = "Company domain"
+            title = "Company domain",
+            description = "Primary company domain; optional."
     )
     private Property<String> domain;
 
     @Schema(
-            title = "Company description"
+            title = "Company description",
+            description = "Optional description text."
     )
     private Property<String> companyDescription;
 
     @Schema(
-            title = "Company industry"
+            title = "Company industry",
+            description = "HubSpot industry code (e.g., ACCOUNTING)."
     )
     private Property<String> industry;
 
     @Schema(
-            title = "Company type",
-            description = "For example: Customer, Prospect, Partner"
+        title = "Company type",
+        description = "Optional HubSpot type value such as CUSTOMER, PROSPECT, or PARTNER."
     )
     private Property<String> companyType;
 
