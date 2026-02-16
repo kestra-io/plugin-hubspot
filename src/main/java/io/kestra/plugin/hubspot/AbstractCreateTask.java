@@ -16,7 +16,8 @@ import java.util.Map;
 public abstract class AbstractCreateTask extends HubspotConnection {
 
     @Schema(
-            title = "Additional properties for the object"
+            title = "Additional HubSpot properties",
+            description = "Optional key-value map merged into the request body. Property names must match HubSpot field keys."
     )
     protected Property<Map<String, Object>> additionalProperties;
 
@@ -29,7 +30,8 @@ public abstract class AbstractCreateTask extends HubspotConnection {
         private Long id;
 
         @Schema(
-                title = "URI of the file "
+                title = "URI of stored properties",
+                description = "Internal storage URI containing the created record properties."
         )
         private URI uri;
     }

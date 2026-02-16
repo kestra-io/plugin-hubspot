@@ -19,8 +19,8 @@ import java.util.*;
 public abstract class AbstractSearchTask extends HubspotConnection {
 
     @Schema(
-        title = "Search all default text properties in records of the specified object.",
-        description = "To learn more, check out the [HubSpot API documentation](https://developers.hubspot.com/docs/api/crm/search)."
+        title = "Search default text properties",
+        description = "Full-text query across default text properties for the target object. See [HubSpot search docs](https://developers.hubspot.com/docs/api/crm/search) for query semantics."
     )
     private Property<String> query;
 
@@ -31,13 +31,13 @@ public abstract class AbstractSearchTask extends HubspotConnection {
 
     @Schema(
         title = "Specific properties to include in the response",
-        description = "Leave empty to get all properties"
+        description = "Optional list of property names. Leave empty to return all properties."
     )
     private Property<List<String>> properties;
 
     @Schema(
         title = "Maximum number of results to return",
-        description = "Default is 10, maximum is 100"
+        description = "Default is 10; maximum allowed by HubSpot is 100."
     )
     @Builder.Default
     private Property<Integer> limit = Property.ofValue(10);
@@ -54,7 +54,7 @@ public abstract class AbstractSearchTask extends HubspotConnection {
 
     @Schema(
         title = "Whether to fetch all records by paging through results",
-        description = "If true, continues fetching all pages until no more results. Default is true."
+        description = "If true, iterates pages until exhausted. Default is false; set to true to retrieve the full result set."
     )
     @Builder.Default
     private Property<Boolean> fetchAllPages = Property.ofValue(false);
@@ -149,7 +149,8 @@ public abstract class AbstractSearchTask extends HubspotConnection {
         private Integer total;
 
         @Schema(
-            title = "URI of the file "
+            title = "URI of stored results",
+            description = "Internal storage URI containing the aggregated search results."
         )
         private URI uri;
     }

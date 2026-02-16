@@ -27,8 +27,8 @@ import java.util.Map;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Create a HubSpot deal.",
-    description =  "Check out the [HubSpot API documentation](https://developers.hubspot.com/docs/reference/api/crm/objects/deals) to learn more."
+    title = "Create HubSpot deal record",
+    description = "Creates a deal via HubSpot CRM v3. Requires API key or OAuth token and stores returned properties to internal storage."
 )
 @Plugin(
     examples = {
@@ -59,50 +59,59 @@ public class Create extends AbstractCreateTask implements RunnableTask<AbstractC
     public static final String HUBSPOT_DEAL_ENDPOINT = "/crm/v3/objects/deals";
 
     @Schema(
-        title = "Deal name"
+        title = "Deal name",
+        description = "Required HubSpot deal name (dealname)."
     )
     @NotNull
     private Property<String> name;
 
     @Schema(
-        title = "Pipeline ID"
+        title = "Pipeline ID",
+        description = "Required pipeline identifier."
     )
     @NotNull
     private Property<String> pipeline;
 
     @Schema(
-        title = "Deal stage"
+        title = "Deal stage",
+        description = "Required stage key within the selected pipeline."
     )
     @NotNull
     private Property<String> stage;
 
     @Schema(
-        title = "Deal amount"
+        title = "Deal amount",
+        description = "Optional amount value."
     )
     private Property<Double> amount;
 
     @Schema(
-        title = "Close date"
+        title = "Close date",
+        description = "Optional close date string (e.g., ISO 8601)."
     )
     private Property<String> closeDate;
 
     @Schema(
-        title = "Deal type"
+        title = "Deal type",
+        description = "Optional HubSpot deal type (e.g., newbusiness or existingbusiness)."
     )
     private Property<String> dealType;
 
     @Schema(
-        title = "Associated company IDs"
+        title = "Associated company IDs",
+        description = "Optional list of HubSpot company record IDs to associate."
     )
     private Property<List<Long>> associatedCompanyIds;
 
     @Schema(
-        title = "Associated contact IDs"
+        title = "Associated contact IDs",
+        description = "Optional list of HubSpot contact record IDs to associate."
     )
     private Property<List<Long>> associatedContactIds;
 
     @Schema(
-        title = "Additional properties"
+        title = "Additional HubSpot properties",
+        description = "Optional key-value map merged into the request body. Property names must match HubSpot field keys."
     )
     private Property<Map<String, Object>> additionalProperties;
 

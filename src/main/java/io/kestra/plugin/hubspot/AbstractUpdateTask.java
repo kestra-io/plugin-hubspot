@@ -16,7 +16,8 @@ import java.util.Map;
 public abstract class AbstractUpdateTask extends HubspotConnection {
 
     @Schema(
-        title = "Additional properties for the record"
+        title = "Additional HubSpot properties",
+        description = "Optional key-value map merged into the PATCH body. Property names must match HubSpot field keys."
     )
     protected Property<Map<String, Object>> additionalProperties;
 
@@ -24,12 +25,13 @@ public abstract class AbstractUpdateTask extends HubspotConnection {
     @Builder
     public static class Output implements io.kestra.core.models.tasks.Output {
         @Schema(
-            title = "Created record ID"
+            title = "Updated record ID"
         )
         private Long id;
 
         @Schema(
-            title = "URI of the file "
+            title = "URI of stored properties",
+            description = "Internal storage URI containing the updated record properties."
         )
         private URI uri;
     }

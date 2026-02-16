@@ -27,7 +27,8 @@ import java.util.Map;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Updates a HubSpot contact."
+    title = "Update HubSpot contact properties",
+    description = "PATCH an existing contact via HubSpot CRM v3. Requires record ID and updates only provided fields; stores returned properties to internal storage."
 )
 @Plugin(
     examples = {
@@ -59,14 +60,15 @@ public class Update extends AbstractUpdateTask implements RunnableTask<AbstractU
     public static final String HUBSPOT_OBJECT_ENDPOINT = "/crm/v3/objects/contacts";
 
     @Schema(
-        title = "Contact ID"
+        title = "Contact ID",
+        description = "Required HubSpot contact record ID to update."
     )
     @NotNull
     private Property<String> contactId;
 
     @Schema(
         title = "Contact email",
-        description = "The email address of the contact (required)"
+        description = "Contact email address; optional for updates."
     )
     private Property<String> email;
 
@@ -92,13 +94,13 @@ public class Update extends AbstractUpdateTask implements RunnableTask<AbstractU
 
     @Schema(
         title = "Lifecycle stage",
-        description = "For example: subscriber, lead, customer, opportunity"
+        description = "HubSpot lifecycle stage key such as subscriber, lead, customer, or opportunity."
     )
     private Property<String> lifecycleStage;
 
     @Schema(
-        title = "Additional properties",
-        description = "Map of additional custom properties for the contact"
+        title = "Additional HubSpot properties",
+        description = "Optional key-value map merged into the PATCH body. Property names must match HubSpot field keys."
     )
     private Property<Map<String, Object>> additionalProperties;
 

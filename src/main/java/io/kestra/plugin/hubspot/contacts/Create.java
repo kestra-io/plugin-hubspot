@@ -27,8 +27,8 @@ import java.util.Map;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Create a HubSpot contact.",
-    description =  "Check out the [HubSpot API documentation](https://developers.hubspot.com/docs/reference/api/crm/objects/contacts) to learn more."
+    title = "Create HubSpot contact record",
+    description = "Creates a contact via HubSpot CRM v3. Requires API key or OAuth token and stores returned properties to internal storage."
 )
 @Plugin(
     examples = {
@@ -58,7 +58,7 @@ public class Create extends AbstractCreateTask implements RunnableTask<AbstractC
 
     @Schema(
         title = "Contact email",
-        description = "The email address of the contact (required)"
+        description = "Required contact email address."
     )
     @NotNull
     private Property<String> email;
@@ -85,13 +85,13 @@ public class Create extends AbstractCreateTask implements RunnableTask<AbstractC
 
     @Schema(
         title = "Lifecycle stage",
-        description = "For example: subscriber, lead, customer, opportunity"
+        description = "HubSpot lifecycle stage key such as subscriber, lead, customer, or opportunity."
     )
     private Property<String> lifecycleStage;
 
     @Schema(
-        title = "Additional properties",
-        description = "Map of additional custom properties for the contact"
+        title = "Additional HubSpot properties",
+        description = "Optional key-value map merged into the request body. Property names must match HubSpot field keys."
     )
     private Property<Map<String, Object>> additionalProperties;
 
