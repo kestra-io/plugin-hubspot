@@ -57,7 +57,6 @@ class HubspotConnectionTest {
 
     @Test
     void shouldRemoveEscapeSequencesFromErrorMessage() throws Exception {
-        // This is the exact raw JSON body from issue #35
         String rawJson = "{\"status\":\"error\","
             + "\"message\":\"Property values were not valid\","
             + "\"errors\":[{"
@@ -70,12 +69,10 @@ class HubspotConnectionTest {
 
         RuntimeException result = invokeClean(fakeException(rawJson));
 
-        // Should contain a clean, readable message
         assertThat(result.getMessage(), containsString("HubSpot API error:"));
         assertThat(result.getMessage(), containsString("accounting"));
         assertThat(result.getMessage(), containsString("administrative"));
 
-        // Should NOT contain the raw escape noise from the original error
         assertThat(result.getMessage(), not(containsString("\\n")));
         assertThat(result.getMessage(), not(containsString("\\\"Accounting\\\"")));
         assertThat(result.getMessage(), not(containsString("display_order")));
@@ -92,7 +89,6 @@ class HubspotConnectionTest {
         HttpClientResponseException original = fakeException(rawJson);
         RuntimeException result = invokeClean(original);
 
-        // Original must be preserved as cause so no stack trace is lost
         assertThat(result.getCause(), org.hamcrest.Matchers.is(original));
     }
 
