@@ -1,7 +1,17 @@
 package io.kestra.plugin.hubspot;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import io.kestra.core.exceptions.IllegalVariableEvaluationException;
 import io.kestra.core.http.HttpRequest;
 import io.kestra.core.http.HttpResponse;
@@ -14,6 +24,7 @@ import io.kestra.core.models.tasks.Task;
 import io.kestra.core.runners.RunContext;
 import io.kestra.core.serializers.FileSerde;
 import io.kestra.core.serializers.JacksonMapper;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -21,15 +32,6 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import reactor.core.publisher.Flux;
-
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 @SuperBuilder
 @ToString
@@ -69,9 +71,9 @@ public abstract class HubspotConnection extends Task {
      * cause so no stack trace information is lost.
      *
      * HubSpot error bodies look like:
-     *   [0x36]{"status":"error","message":"...","errors":[{"message":"Developer
-     *   was not one of the allowed options: [label: \"Accounting\"\nvalue:
-     *   \"accounting\"\n...]","code":"INVALID_OPTION"}]}
+     * [0x36]{"status":"error","message":"...","errors":[{"message":"Developer
+     * was not one of the allowed options: [label: \"Accounting\"\nvalue:
+     * \"accounting\"\n...]","code":"INVALID_OPTION"}]}
      *
      * This strips the hex-length prefix, deserialises the JSON, and collapses
      * the YAML-style option list inside each error message down to a tidy
@@ -133,8 +135,8 @@ public abstract class HubspotConnection extends Task {
     }
 
     public void getAuthorizedRequest(
-            RunContext runContext,
-            HttpRequest.HttpRequestBuilder requestBuilder) throws IllegalVariableEvaluationException {
+        RunContext runContext,
+        HttpRequest.HttpRequestBuilder requestBuilder) throws IllegalVariableEvaluationException {
         var apiKeyRendered = runContext.render(this.apiKey).as(String.class);
         if (apiKeyRendered.isPresent()) {
             requestBuilder.addHeader("Authorization", "Bearer " + apiKeyRendered.get()).build();

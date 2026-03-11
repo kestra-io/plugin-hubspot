@@ -1,5 +1,8 @@
 package io.kestra.plugin.hubspot.companies;
 
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.condition.DisabledIf;
+
 import io.kestra.core.junit.annotations.KestraTest;
 import io.kestra.core.models.property.Property;
 import io.kestra.core.models.tasks.VoidOutput;
@@ -7,9 +10,8 @@ import io.kestra.core.runners.RunContext;
 import io.kestra.core.runners.RunContextFactory;
 import io.kestra.plugin.hubspot.AbstractCreateTask;
 import io.kestra.plugin.hubspot.AbstractTaskIT;
+
 import jakarta.inject.Inject;
-import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.condition.DisabledIf;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;

@@ -1,5 +1,11 @@
 package io.kestra.plugin.hubspot.contacts;
 
+import java.net.URI;
+import java.util.List;
+import java.util.Map;
+
+import org.slf4j.Logger;
+
 import io.kestra.core.http.HttpRequest;
 import io.kestra.core.models.annotations.Example;
 import io.kestra.core.models.annotations.Plugin;
@@ -8,6 +14,7 @@ import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.runners.RunContext;
 import io.kestra.plugin.hubspot.AbstractUpdateTask;
 import io.kestra.plugin.hubspot.HubspotResponse;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
@@ -15,11 +22,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
-import org.slf4j.Logger;
-
-import java.net.URI;
-import java.util.List;
-import java.util.Map;
 
 @SuperBuilder
 @ToString
@@ -123,7 +125,6 @@ public class Update extends AbstractUpdateTask implements RunnableTask<AbstractU
         runContext.render(this.jobTitle).as(String.class).ifPresent(request::setJobTitle);
 
         runContext.render(this.lifecycleStage).as(String.class).ifPresent(request::setLifecycleStage);
-
 
         if (this.additionalProperties != null) {
             Map<String, Object> additionalProps = runContext.render(this.additionalProperties).asMap(String.class, Object.class);

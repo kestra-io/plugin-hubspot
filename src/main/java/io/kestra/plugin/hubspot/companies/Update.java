@@ -1,5 +1,11 @@
 package io.kestra.plugin.hubspot.companies;
 
+import java.net.URI;
+import java.util.List;
+import java.util.Map;
+
+import org.slf4j.Logger;
+
 import io.kestra.core.http.HttpRequest;
 import io.kestra.core.models.annotations.Example;
 import io.kestra.core.models.annotations.Plugin;
@@ -8,6 +14,7 @@ import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.runners.RunContext;
 import io.kestra.plugin.hubspot.AbstractUpdateTask;
 import io.kestra.plugin.hubspot.HubspotResponse;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
@@ -15,11 +22,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
-import org.slf4j.Logger;
-
-import java.net.URI;
-import java.util.List;
-import java.util.Map;
 
 @SuperBuilder
 @ToString
@@ -27,8 +29,8 @@ import java.util.Map;
 @Getter
 @NoArgsConstructor
 @Schema(
-        title = "Update HubSpot company properties",
-        description = "PATCH an existing company via HubSpot CRM v3. Requires record ID and updates only provided fields; stores returned properties to internal storage."
+    title = "Update HubSpot company properties",
+    description = "PATCH an existing company via HubSpot CRM v3. Requires record ID and updates only provided fields; stores returned properties to internal storage."
 )
 @Plugin(
     examples = {
@@ -52,41 +54,41 @@ import java.util.Map;
                       city: "New York"
                       state: "NY"
                 """
-                )
-        }
+        )
+    }
 )
 public class Update extends AbstractUpdateTask implements RunnableTask<AbstractUpdateTask.Output> {
 
     public static final String HUBSPOT_OBJECT_ENDPOINT = "/crm/v3/objects/companies";
 
     @Schema(
-            title = "Company ID",
-            description = "Required HubSpot company record ID to update."
+        title = "Company ID",
+        description = "Required HubSpot company record ID to update."
     )
     @NotNull
     private Property<String> companyId;
 
     @Schema(
-            title = "Company name",
-            description = "New company name; optional."
+        title = "Company name",
+        description = "New company name; optional."
     )
     private Property<String> name;
 
     @Schema(
-            title = "Company domain",
-            description = "Primary company domain; optional."
+        title = "Company domain",
+        description = "Primary company domain; optional."
     )
     private Property<String> domain;
 
     @Schema(
-            title = "Company description",
-            description = "Optional description text."
+        title = "Company description",
+        description = "Optional description text."
     )
     private Property<String> companyDescription;
 
     @Schema(
-            title = "Company industry",
-            description = "HubSpot industry code (e.g., ACCOUNTING)."
+        title = "Company industry",
+        description = "HubSpot industry code (e.g., ACCOUNTING)."
     )
     private Property<String> industry;
 
@@ -124,10 +126,10 @@ public class Update extends AbstractUpdateTask implements RunnableTask<AbstractU
         String requestBody = mapper.writeValueAsString(request);
 
         HttpRequest.HttpRequestBuilder requestBuilder = HttpRequest.builder()
-                .uri(uri)
-                .addHeader("Content-Type", JSON_CONTENT_TYPE)
-                .method("PATCH")
-                .body(HttpRequest.StringRequestBody.builder().content(requestBody).build());
+            .uri(uri)
+            .addHeader("Content-Type", JSON_CONTENT_TYPE)
+            .method("PATCH")
+            .body(HttpRequest.StringRequestBody.builder().content(requestBody).build());
 
         getAuthorizedRequest(runContext, requestBuilder);
 
@@ -138,9 +140,9 @@ public class Update extends AbstractUpdateTask implements RunnableTask<AbstractU
         logger.info("Updated HubSpot company: {}", response);
 
         return Output.builder()
-                .id(response.getId())
-                .uri(fileURI)
-                .build();
+            .id(response.getId())
+            .uri(fileURI)
+            .build();
     }
 
     @Override

@@ -5,6 +5,7 @@ import io.kestra.core.models.annotations.Plugin;
 import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.runners.RunContext;
 import io.kestra.plugin.hubspot.AbstractSearchTask;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -18,8 +19,8 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @NoArgsConstructor
 @Schema(
-        title = "Search HubSpot company records",
-        description = "Runs HubSpot CRM search on companies with optional query, filters, sorts, and property selection. Default limit is 10; set `fetchAllPages` to true to page through all results."
+    title = "Search HubSpot company records",
+    description = "Runs HubSpot CRM search on companies with optional query, filters, sorts, and property selection. Default limit is 10; set `fetchAllPages` to true to page through all results."
 )
 @Plugin(
     examples = {
@@ -42,8 +43,8 @@ import lombok.experimental.SuperBuilder;
                       - propertyName: "createdate"
                         direction: "DESCENDING"
                 """
-                )
-        }
+        )
+    }
 )
 public class Search extends AbstractSearchTask implements RunnableTask<AbstractSearchTask.Output> {
 

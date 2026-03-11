@@ -7,6 +7,7 @@ import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.models.tasks.VoidOutput;
 import io.kestra.core.runners.RunContext;
 import io.kestra.plugin.hubspot.AbstractDeleteTask;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
@@ -21,14 +22,14 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @NoArgsConstructor
 @Schema(
-        title = "Delete HubSpot contact by ID",
-        description = "Deletes a contact record via HubSpot CRM v3. Operation is irreversible; requires API key or OAuth token."
+    title = "Delete HubSpot contact by ID",
+    description = "Deletes a contact record via HubSpot CRM v3. Operation is irreversible; requires API key or OAuth token."
 )
 @Plugin(
-        examples = {
-                @Example(
-                full = true,
-                code = """
+    examples = {
+        @Example(
+            full = true,
+            code = """
                 id: hubspot_contacts_delete
                 namespace: contact.team
 
@@ -42,16 +43,16 @@ import lombok.experimental.SuperBuilder;
                     apiKey: "{{ secret('HUBSPOT_API_KEY') }}"
                     contactId: "{{ inputs.contact_id }}"
                 """
-                )
-        }
+        )
+    }
 )
 public class Delete extends AbstractDeleteTask implements RunnableTask<VoidOutput> {
 
     public static final String HUBSPOT_OBJECT_ENDPOINT = "/crm/v3/objects/contacts";
 
     @Schema(
-            title = "Contact ID",
-            description = "Required HubSpot contact record ID."
+        title = "Contact ID",
+        description = "Required HubSpot contact record ID."
     )
     @NotNull
     private Property<String> contactId;
@@ -61,7 +62,7 @@ public class Delete extends AbstractDeleteTask implements RunnableTask<VoidOutpu
 
         String recordId = runContext.render(contactId).as(String.class).orElseThrow();
 
-        super.run(runContext,recordId);
+        super.run(runContext, recordId);
 
         return null;
     }

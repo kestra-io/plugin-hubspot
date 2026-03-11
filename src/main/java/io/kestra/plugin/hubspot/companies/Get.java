@@ -6,6 +6,7 @@ import io.kestra.core.models.property.Property;
 import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.runners.RunContext;
 import io.kestra.plugin.hubspot.AbstractGetTask;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
@@ -20,8 +21,8 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @NoArgsConstructor
 @Schema(
-        title = "Fetch HubSpot company by ID",
-        description = "Retrieves company properties via HubSpot CRM v3. Optionally restricts returned fields with `properties`."
+    title = "Fetch HubSpot company by ID",
+    description = "Retrieves company properties via HubSpot CRM v3. Optionally restricts returned fields with `properties`."
 )
 @Plugin(
     examples = {
@@ -45,16 +46,16 @@ import lombok.experimental.SuperBuilder;
                       - domain
                       - industry
                 """
-                )
-        }
+        )
+    }
 )
 public class Get extends AbstractGetTask implements RunnableTask<AbstractGetTask.Output> {
 
     public static final String HUBSPOT_OBJECT_ENDPOINT = "/crm/v3/objects/companies";
 
     @Schema(
-            title = "Company ID",
-            description = "Required HubSpot company record ID."
+        title = "Company ID",
+        description = "Required HubSpot company record ID."
     )
     @NotNull
     private Property<String> companyId;

@@ -7,6 +7,7 @@ import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.models.tasks.VoidOutput;
 import io.kestra.core.runners.RunContext;
 import io.kestra.plugin.hubspot.AbstractDeleteTask;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
@@ -61,7 +62,7 @@ public class Delete extends AbstractDeleteTask implements RunnableTask<VoidOutpu
 
         String recordId = runContext.render(dealId).as(String.class).orElseThrow();
 
-        super.run(runContext,recordId);
+        super.run(runContext, recordId);
 
         return null;
     }

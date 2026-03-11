@@ -1,5 +1,10 @@
 package io.kestra.plugin.hubspot.tickets;
 
+import java.net.URI;
+import java.util.List;
+
+import org.slf4j.Logger;
+
 import io.kestra.core.http.HttpRequest;
 import io.kestra.core.models.annotations.Example;
 import io.kestra.core.models.annotations.Plugin;
@@ -8,13 +13,10 @@ import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.runners.RunContext;
 import io.kestra.plugin.hubspot.AbstractCreateTask;
 import io.kestra.plugin.hubspot.HubspotResponse;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import org.slf4j.Logger;
-
-import java.net.URI;
-import java.util.List;
 
 @SuperBuilder
 @ToString
@@ -83,6 +85,7 @@ public class Create extends AbstractCreateTask implements RunnableTask<AbstractC
         MEDIUM,
         HIGH;
     }
+
     @Schema(
         title = "Ticket subject",
         description = "Subject line for the ticket. HubSpot requires a subject on creation."
@@ -140,10 +143,10 @@ public class Create extends AbstractCreateTask implements RunnableTask<AbstractC
         logger.info("Request body: {}", requestBody);
 
         HttpRequest.HttpRequestBuilder requestBuilder = HttpRequest.builder()
-                .uri(uri)
-                .addHeader("Content-Type", JSON_CONTENT_TYPE)
-                .method("POST")
-                .body(HttpRequest.StringRequestBody.builder().content(requestBody).build());
+            .uri(uri)
+            .addHeader("Content-Type", JSON_CONTENT_TYPE)
+            .method("POST")
+            .body(HttpRequest.StringRequestBody.builder().content(requestBody).build());
 
         getAuthorizedRequest(runContext, requestBuilder);
 

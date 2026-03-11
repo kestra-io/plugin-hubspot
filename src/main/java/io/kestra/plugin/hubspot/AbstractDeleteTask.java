@@ -1,16 +1,16 @@
 package io.kestra.plugin.hubspot;
 
+import java.net.URI;
+
 import io.kestra.core.http.HttpRequest;
 import io.kestra.core.models.tasks.VoidOutput;
 import io.kestra.core.runners.RunContext;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
-import org.slf4j.Logger;
-
-import java.net.URI;
 
 @SuperBuilder
 @ToString

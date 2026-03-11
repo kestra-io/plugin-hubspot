@@ -2,14 +2,15 @@ package io.kestra.plugin.hubspot;
 
 import java.lang.reflect.Method;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.not;
 import org.junit.jupiter.api.Test;
 
 import io.kestra.core.http.HttpResponse;
 import io.kestra.core.http.client.HttpClientResponseException;
 import io.kestra.core.junit.annotations.KestraTest;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.not;
 
 @KestraTest
 class HubspotConnectionTest {
@@ -17,7 +18,7 @@ class HubspotConnectionTest {
     /**
      * Builds a fake HttpClientResponseException using the same message format
      * that FailedResponseInterceptor produces:
-     *   "Failed http request with response code '400' and body:\n<rawJson>"
+     * "Failed http request with response code '400' and body:\n<rawJson>"
      */
     private HttpClientResponseException fakeException(String rawJson) throws Exception {
         String message = "Failed http request with response code '400' and body:\n" + rawJson;

@@ -7,6 +7,7 @@ import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.models.tasks.VoidOutput;
 import io.kestra.core.runners.RunContext;
 import io.kestra.plugin.hubspot.AbstractDeleteTask;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
@@ -21,8 +22,8 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @NoArgsConstructor
 @Schema(
-        title = "Delete HubSpot company by ID",
-        description = "Deletes a company record via HubSpot CRM v3. Operation is irreversible; requires API key or OAuth token."
+    title = "Delete HubSpot company by ID",
+    description = "Deletes a company record via HubSpot CRM v3. Operation is irreversible; requires API key or OAuth token."
 )
 @Plugin(
     examples = {
@@ -42,16 +43,16 @@ import lombok.experimental.SuperBuilder;
                     apiKey: "{{ secret('HUBSPOT_API_KEY') }}"
                     companyId: "{{ inputs.company_id }}"
                 """
-                )
-        }
+        )
+    }
 )
 public class Delete extends AbstractDeleteTask implements RunnableTask<VoidOutput> {
 
     public static final String HUBSPOT_OBJECT_ENDPOINT = "/crm/v3/objects/companies";
 
     @Schema(
-            title = "Company ID",
-            description = "Required HubSpot company record ID."
+        title = "Company ID",
+        description = "Required HubSpot company record ID."
     )
     @NotNull
     private Property<String> companyId;
@@ -61,7 +62,7 @@ public class Delete extends AbstractDeleteTask implements RunnableTask<VoidOutpu
 
         String recordId = runContext.render(companyId).as(String.class).orElseThrow();
 
-        super.run(runContext,recordId);
+        super.run(runContext, recordId);
 
         return null;
     }

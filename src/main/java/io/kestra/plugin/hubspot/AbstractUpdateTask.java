@@ -1,12 +1,13 @@
 package io.kestra.plugin.hubspot;
 
+import java.net.URI;
+import java.util.Map;
+
 import io.kestra.core.models.property.Property;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-
-import java.net.URI;
-import java.util.Map;
 
 @SuperBuilder
 @ToString
