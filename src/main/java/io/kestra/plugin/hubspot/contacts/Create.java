@@ -22,6 +22,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
+import io.kestra.core.models.annotations.PluginProperty;
 
 @SuperBuilder
 @ToString
@@ -63,38 +64,45 @@ public class Create extends AbstractCreateTask implements RunnableTask<AbstractC
         description = "Required contact email address."
     )
     @NotNull
+    @PluginProperty(group = "main")
     private Property<String> email;
 
     @Schema(
         title = "First name"
     )
+    @PluginProperty(group = "advanced")
     private Property<String> firstName;
 
     @Schema(
         title = "Last name"
     )
+    @PluginProperty(group = "advanced")
     private Property<String> lastName;
 
     @Schema(
         title = "Phone number"
     )
+    @PluginProperty(group = "advanced")
     private Property<String> phone;
 
     @Schema(
         title = "Job title"
     )
+    @PluginProperty(group = "advanced")
     private Property<String> jobTitle;
 
     @Schema(
         title = "Lifecycle stage",
         description = "HubSpot lifecycle stage key such as subscriber, lead, customer, or opportunity."
     )
+    @PluginProperty(group = "advanced")
     private Property<String> lifecycleStage;
 
     @Schema(
         title = "Additional HubSpot properties",
         description = "Optional key-value map merged into the request body. Property names must match HubSpot field keys."
     )
+    @PluginProperty(group = "advanced")
     private Property<Map<String, Object>> additionalProperties;
 
     @Override

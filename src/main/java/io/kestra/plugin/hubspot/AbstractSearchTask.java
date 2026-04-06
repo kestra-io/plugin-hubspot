@@ -12,6 +12,7 @@ import io.kestra.core.runners.RunContext;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import io.kestra.core.models.annotations.PluginProperty;
 
 @SuperBuilder
 @ToString
@@ -24,17 +25,20 @@ public abstract class AbstractSearchTask extends HubspotConnection {
         title = "Search default text properties",
         description = "Full-text query across default text properties for the target object. See [HubSpot search docs](https://developers.hubspot.com/docs/api/crm/search) for query semantics."
     )
+    @PluginProperty(group = "processing")
     private Property<String> query;
 
     @Schema(
         title = "Filter groups for the search query"
     )
+    @PluginProperty(group = "advanced")
     private Property<List<Map<String, Object>>> filterGroups;
 
     @Schema(
         title = "Specific properties to include in the response",
         description = "Optional list of property names. Leave empty to return all properties."
     )
+    @PluginProperty(group = "advanced")
     private Property<List<String>> properties;
 
     @Schema(
@@ -42,16 +46,19 @@ public abstract class AbstractSearchTask extends HubspotConnection {
         description = "Default is 10; maximum allowed by HubSpot is 100."
     )
     @Builder.Default
+    @PluginProperty(group = "advanced")
     private Property<Integer> limit = Property.ofValue(10);
 
     @Schema(
         title = "Pagination token for fetching the next page of results"
     )
+    @PluginProperty(group = "advanced")
     private Property<String> after;
 
     @Schema(
         title = "Sort options for the results"
     )
+    @PluginProperty(group = "advanced")
     private Property<List<Map<String, String>>> sorts;
 
     @Schema(
@@ -59,6 +66,7 @@ public abstract class AbstractSearchTask extends HubspotConnection {
         description = "If true, iterates pages until exhausted. Default is false; set to true to retrieve the full result set."
     )
     @Builder.Default
+    @PluginProperty(group = "execution")
     private Property<Boolean> fetchAllPages = Property.ofValue(false);
 
     public Output run(RunContext runContext) throws Exception {

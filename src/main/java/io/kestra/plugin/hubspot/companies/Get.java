@@ -14,6 +14,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
+import io.kestra.core.models.annotations.PluginProperty;
 
 @SuperBuilder
 @ToString
@@ -58,6 +59,7 @@ public class Get extends AbstractGetTask implements RunnableTask<AbstractGetTask
         description = "Required HubSpot company record ID."
     )
     @NotNull
+    @PluginProperty(group = "main")
     private Property<String> companyId;
 
     @Override

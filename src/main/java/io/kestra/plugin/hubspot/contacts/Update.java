@@ -22,6 +22,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
+import io.kestra.core.models.annotations.PluginProperty;
 
 @SuperBuilder
 @ToString
@@ -66,44 +67,52 @@ public class Update extends AbstractUpdateTask implements RunnableTask<AbstractU
         description = "Required HubSpot contact record ID to update."
     )
     @NotNull
+    @PluginProperty(group = "main")
     private Property<String> contactId;
 
     @Schema(
         title = "Contact email",
         description = "Contact email address; optional for updates."
     )
+    @PluginProperty(group = "advanced")
     private Property<String> email;
 
     @Schema(
         title = "First name"
     )
+    @PluginProperty(group = "advanced")
     private Property<String> firstName;
 
     @Schema(
         title = "Last name"
     )
+    @PluginProperty(group = "advanced")
     private Property<String> lastName;
 
     @Schema(
         title = "Phone number"
     )
+    @PluginProperty(group = "advanced")
     private Property<String> phone;
 
     @Schema(
         title = "Job title"
     )
+    @PluginProperty(group = "advanced")
     private Property<String> jobTitle;
 
     @Schema(
         title = "Lifecycle stage",
         description = "HubSpot lifecycle stage key such as subscriber, lead, customer, or opportunity."
     )
+    @PluginProperty(group = "advanced")
     private Property<String> lifecycleStage;
 
     @Schema(
         title = "Additional HubSpot properties",
         description = "Optional key-value map merged into the PATCH body. Property names must match HubSpot field keys."
     )
+    @PluginProperty(group = "advanced")
     private Property<Map<String, Object>> additionalProperties;
 
     @Override
