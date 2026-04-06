@@ -17,6 +17,7 @@ import io.kestra.plugin.hubspot.HubspotResponse;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import io.kestra.core.models.annotations.PluginProperty;
 
 @SuperBuilder
 @ToString
@@ -90,18 +91,21 @@ public class Create extends AbstractCreateTask implements RunnableTask<AbstractC
         title = "Ticket subject",
         description = "Subject line for the ticket. HubSpot requires a subject on creation."
     )
+    @PluginProperty(group = "main")
     private Property<String> subject;
 
     @Schema(
         title = "Ticket body",
         description = "Body/description content of the ticket."
     )
+    @PluginProperty(group = "advanced")
     private Property<String> content;
 
     @Schema(
         title = "Ticket pipeline",
         description = "Optional pipeline ID. If omitted, HubSpot default pipeline applies."
     )
+    @PluginProperty(group = "advanced")
     private Property<Integer> pipeline;
 
     @Schema(
@@ -109,12 +113,14 @@ public class Create extends AbstractCreateTask implements RunnableTask<AbstractC
         description = "Stage ID within the pipeline. Defaults to 1."
     )
     @Builder.Default
+    @PluginProperty(group = "advanced")
     private Property<Integer> stage = Property.ofValue(1);
 
     @Schema(
         title = "Ticket priority",
         description = "Optional priority value: LOW, MEDIUM, or HIGH."
     )
+    @PluginProperty(group = "advanced")
     private Property<Priority> priority;
 
     @Override

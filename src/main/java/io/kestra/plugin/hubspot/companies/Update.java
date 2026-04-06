@@ -22,6 +22,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
+import io.kestra.core.models.annotations.PluginProperty;
 
 @SuperBuilder
 @ToString
@@ -66,36 +67,42 @@ public class Update extends AbstractUpdateTask implements RunnableTask<AbstractU
         description = "Required HubSpot company record ID to update."
     )
     @NotNull
+    @PluginProperty(group = "main")
     private Property<String> companyId;
 
     @Schema(
         title = "Company name",
         description = "New company name; optional."
     )
+    @PluginProperty(group = "destination")
     private Property<String> name;
 
     @Schema(
         title = "Company domain",
         description = "Primary company domain; optional."
     )
+    @PluginProperty(group = "advanced")
     private Property<String> domain;
 
     @Schema(
         title = "Company description",
         description = "Optional description text."
     )
+    @PluginProperty(group = "advanced")
     private Property<String> companyDescription;
 
     @Schema(
         title = "Company industry",
         description = "HubSpot industry code (e.g., ACCOUNTING)."
     )
+    @PluginProperty(group = "advanced")
     private Property<String> industry;
 
     @Schema(
         title = "Company type",
         description = "Optional HubSpot type value such as CUSTOMER, PROSPECT, or PARTNER."
     )
+    @PluginProperty(group = "advanced")
     private Property<String> companyType;
 
     @Override

@@ -10,6 +10,7 @@ import io.kestra.core.runners.RunContext;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import io.kestra.core.models.annotations.PluginProperty;
 
 @SuperBuilder
 @ToString
@@ -22,6 +23,7 @@ public abstract class AbstractGetTask extends HubspotConnection {
         title = "Specific properties to include in the response",
         description = "Optional list of property names. Leave empty to return all properties."
     )
+    @PluginProperty(group = "advanced")
     private Property<List<String>> properties;
 
     public Output run(RunContext runContext, String recordId) throws Exception {

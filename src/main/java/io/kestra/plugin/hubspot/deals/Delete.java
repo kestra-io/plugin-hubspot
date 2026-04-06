@@ -15,6 +15,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
+import io.kestra.core.models.annotations.PluginProperty;
 
 @SuperBuilder
 @ToString
@@ -55,6 +56,7 @@ public class Delete extends AbstractDeleteTask implements RunnableTask<VoidOutpu
         description = "Required HubSpot deal record ID."
     )
     @NotNull
+    @PluginProperty(group = "main")
     private Property<String> dealId;
 
     @Override

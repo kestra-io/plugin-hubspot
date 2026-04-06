@@ -20,6 +20,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
+import io.kestra.core.models.annotations.PluginProperty;
 
 @SuperBuilder
 @ToString
@@ -63,6 +64,7 @@ public class Create extends AbstractCreateTask implements RunnableTask<AbstractC
         description = "Required company name."
     )
     @NotNull
+    @PluginProperty(group = "main")
     private Property<String> name;
 
     @Schema(
@@ -70,24 +72,28 @@ public class Create extends AbstractCreateTask implements RunnableTask<AbstractC
         description = "Required primary company domain."
     )
     @NotNull
+    @PluginProperty(group = "main")
     private Property<String> domain;
 
     @Schema(
         title = "Company description",
         description = "Optional description text."
     )
+    @PluginProperty(group = "advanced")
     private Property<String> companyDescription;
 
     @Schema(
         title = "Company industry",
         description = "HubSpot industry code (e.g., ACCOUNTING)."
     )
+    @PluginProperty(group = "advanced")
     private Property<String> industry;
 
     @Schema(
         title = "Company type",
         description = "Optional HubSpot type value such as CUSTOMER, PROSPECT, or PARTNER."
     )
+    @PluginProperty(group = "advanced")
     private Property<String> companyType;
 
     @Override

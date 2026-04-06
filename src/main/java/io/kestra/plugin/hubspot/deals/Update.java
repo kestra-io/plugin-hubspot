@@ -22,6 +22,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
+import io.kestra.core.models.annotations.PluginProperty;
 
 @SuperBuilder
 @ToString
@@ -67,60 +68,70 @@ public class Update extends AbstractUpdateTask implements RunnableTask<AbstractU
         description = "Required HubSpot deal record ID to update."
     )
     @NotNull
+    @PluginProperty(group = "main")
     private Property<String> dealId;
 
     @Schema(
         title = "Deal name",
         description = "New deal name; optional."
     )
+    @PluginProperty(group = "destination")
     private Property<String> name;
 
     @Schema(
         title = "Pipeline ID",
         description = "Pipeline identifier for the deal; optional on update."
     )
+    @PluginProperty(group = "advanced")
     private Property<String> pipeline;
 
     @Schema(
         title = "Deal stage",
         description = "Stage key within the selected pipeline; optional."
     )
+    @PluginProperty(group = "advanced")
     private Property<String> stage;
 
     @Schema(
         title = "Deal amount",
         description = "Optional amount value."
     )
+    @PluginProperty(group = "advanced")
     private Property<Double> amount;
 
     @Schema(
         title = "Close date",
         description = "Optional close date string (e.g., ISO 8601)."
     )
+    @PluginProperty(group = "advanced")
     private Property<String> closeDate;
 
     @Schema(
         title = "Deal type",
         description = "Optional HubSpot deal type (e.g., newbusiness or existingbusiness)."
     )
+    @PluginProperty(group = "advanced")
     private Property<String> dealType;
 
     @Schema(
         title = "Associated company IDs",
         description = "Optional list of HubSpot company record IDs to associate."
     )
+    @PluginProperty(group = "advanced")
     private Property<List<Long>> associatedCompanyIds;
 
     @Schema(
         title = "Associated contact IDs",
         description = "Optional list of HubSpot contact record IDs to associate."
     )
+    @PluginProperty(group = "advanced")
     private Property<List<Long>> associatedContactIds;
 
     @Schema(
         title = "Additional HubSpot properties",
         description = "Optional key-value map merged into the PATCH body. Property names must match HubSpot field keys."
     )
+    @PluginProperty(group = "advanced")
     private Property<Map<String, Object>> additionalProperties;
 
     @Override

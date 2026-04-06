@@ -8,6 +8,7 @@ import io.kestra.core.models.property.Property;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import io.kestra.core.models.annotations.PluginProperty;
 
 @SuperBuilder
 @ToString
@@ -20,6 +21,7 @@ public abstract class AbstractCreateTask extends HubspotConnection {
         title = "Additional HubSpot properties",
         description = "Optional key-value map merged into the request body. Property names must match HubSpot field keys."
     )
+    @PluginProperty(group = "advanced")
     protected Property<Map<String, Object>> additionalProperties;
 
     @Getter
