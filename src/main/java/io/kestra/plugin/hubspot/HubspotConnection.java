@@ -45,11 +45,11 @@ public abstract class HubspotConnection extends Task {
     public static final String JSON_CONTENT_TYPE = "application/json; charset=UTF-8";
 
     @Schema(title = "HubSpot API key")
-    @PluginProperty(dynamic = true, group = "connection")
+    @PluginProperty(dynamic = true, group = "connection", secret = true)
     private Property<String> apiKey;
 
     @Schema(title = "HubSpot OAuth token")
-    @PluginProperty(dynamic = true, group = "connection")
+    @PluginProperty(dynamic = true, group = "connection", secret = true)
     private Property<String> oauthToken;
 
     @Schema(title = "The HTTP client configuration.")
