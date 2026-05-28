@@ -1,6 +1,6 @@
 group: io.kestra.plugin.hubspot.deals
 name: "deals"
-title: "Deals"
+title: "HubSpot Deals"
 description: "Tasks that create, update, search, and delete HubSpot deals."
 body: "Provide your HubSpot token along with pipeline/stage, amounts, and related contact/company IDs to manage deals, search with filters, and remove records, returning deal payloads for revenue operations workflows."
 videos: []
