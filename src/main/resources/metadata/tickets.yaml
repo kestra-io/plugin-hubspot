@@ -1,6 +1,6 @@
 group: io.kestra.plugin.hubspot.tickets
 name: "tickets"
-title: "Tickets"
+title: "HubSpot Tickets"
 description: "Tasks that create, update, search, and delete HubSpot tickets."
 body: "Use your HubSpot token with ticket properties (subject, content, pipeline/stage) to open or update support tickets, search via filters, and delete by ID while capturing responses for support workflows."
 videos: []
