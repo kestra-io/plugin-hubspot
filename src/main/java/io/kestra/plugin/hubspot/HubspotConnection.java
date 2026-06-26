@@ -52,7 +52,7 @@ public abstract class HubspotConnection extends Task {
     @PluginProperty(dynamic = true, group = "connection", secret = true)
     private Property<String> oauthToken;
 
-    @Schema(title = "The HTTP client configuration.")
+    @Schema(title = "The HTTP client configuration")
     HttpConfiguration options;
 
     public <T> T makeCall(RunContext runContext, HttpRequest.HttpRequestBuilder requestBuilder, Class<T> responseType) throws Exception {
