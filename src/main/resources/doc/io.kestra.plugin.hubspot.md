@@ -4,7 +4,7 @@ Manage contacts, companies, deals, and tickets in HubSpot from Kestra flows.
 
 ## Authentication
 
-Set `apiKey` for API key auth or `oauthToken` for OAuth token auth — they are mutually exclusive, with `apiKey` taking precedence. Store secrets in [secrets](https://kestra.io/docs/concepts/secret) and apply connection properties globally with [plugin defaults](https://kestra.io/docs/workflow-components/plugin-defaults).
+Set `apiKey` for API key auth or `oauthToken` for OAuth token auth — they are mutually exclusive, with `apiKey` taking precedence. Store secrets in [secrets](https://kestra.io/docs/concepts/secret) and set connection properties on each task.
 
 ## Tasks
 
