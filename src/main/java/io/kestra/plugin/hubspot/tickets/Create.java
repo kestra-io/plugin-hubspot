@@ -2,14 +2,18 @@ package io.kestra.plugin.hubspot.tickets;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import io.kestra.core.http.HttpRequest;
 import io.kestra.core.models.annotations.Example;
 import io.kestra.core.models.annotations.Plugin;
 import io.kestra.core.models.property.Property;
 import io.kestra.core.models.tasks.RunnableTask;
+import io.kestra.core.models.tasks.TicketingTaskInterface;
 import io.kestra.core.runners.RunContext;
 import io.kestra.plugin.hubspot.AbstractCreateTask;
 import io.kestra.plugin.hubspot.HubspotResponse;
@@ -18,6 +22,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import io.kestra.core.models.annotations.PluginProperty;
+import io.kestra.core.models.annotations.TicketingField;
 
 @SuperBuilder
 @ToString
@@ -77,9 +82,11 @@ import io.kestra.core.models.annotations.PluginProperty;
         )
     }
 )
-public class Create extends AbstractCreateTask implements RunnableTask<AbstractCreateTask.Output> {
+public class Create extends AbstractCreateTask implements RunnableTask<Create.Output>, TicketingTaskInterface {
 
     public static final String HUBSPOT_TICKET_ENDPOINT = "/crm/v3/objects/tickets";
+    private static final String ACCOUNT_DETAILS_ENDPOINT = "/account-info/v3/details";
+    private static final String DEFAULT_UI_DOMAIN = "app.hubspot.com";
 
     public enum Priority {
         LOW,
@@ -92,6 +99,7 @@ public class Create extends AbstractCreateTask implements RunnableTask<AbstractC
         description = "Subject line for the ticket. HubSpot requires a subject on creation."
     )
     @PluginProperty(group = "main")
+    @TicketingField(role = TicketingField.Role.CASE_TITLE)
     private Property<String> subject;
 
     @Schema(
@@ -99,6 +107,7 @@ public class Create extends AbstractCreateTask implements RunnableTask<AbstractC
         description = "Body/description content of the ticket."
     )
     @PluginProperty(group = "advanced")
+    @TicketingField(role = TicketingField.Role.CASE_DESCRIPTION)
     private Property<String> content;
 
     @Schema(
@@ -121,7 +130,15 @@ public class Create extends AbstractCreateTask implements RunnableTask<AbstractC
         description = "Optional priority value: LOW, MEDIUM, or HIGH."
     )
     @PluginProperty(group = "advanced")
+    @TicketingField(role = TicketingField.Role.CASE_SEVERITY, valueMap = {@TicketingField.Mapping(from = "CRITICAL", to = "HIGH"), @TicketingField.Mapping(from = "HIGH", to = "HIGH"), @TicketingField.Mapping(from = "MEDIUM", to = "MEDIUM"), @TicketingField.Mapping(from = "LOW", to = "LOW")})
     private Property<Priority> priority;
+
+    @Schema(
+        title = "HubSpot portal ID",
+        description = "Numeric ID of the HubSpot account, used to build the `url` output. When omitted, it is looked up from the account the token belongs to."
+    )
+    @PluginProperty(group = "connection")
+    private Property<String> portalId;
 
     @Override
     public Create.Output run(RunContext runContext) throws Exception {
@@ -148,6 +165,8 @@ public class Create extends AbstractCreateTask implements RunnableTask<AbstractC
 
         logger.info("Request body: {}", requestBody);
 
+        Optional<String> explicitPortalId = runContext.render(this.portalId).as(String.class);
+
         HttpRequest.HttpRequestBuilder requestBuilder = HttpRequest.builder()
             .uri(uri)
             .addHeader("Content-Type", JSON_CONTENT_TYPE)
@@ -167,11 +186,70 @@ public class Create extends AbstractCreateTask implements RunnableTask<AbstractC
         return Output.builder()
             .id(response.getId())
             .uri(fileURI)
+            .url(ticketUrl(runContext, logger, explicitPortalId, response.getId()))
             .build();
     }
 
     @Override
     protected String getEndpoint() {
         return HUBSPOT_TICKET_ENDPOINT;
+    }
+
+    static String buildTicketUrl(String uiDomain, String portalId, Long ticketId) {
+        return "https://" + uiDomain + "/contacts/" + portalId + "/record/0-5/" + ticketId;
+    }
+
+    static String resolveTicketUrl(Optional<String> explicitPortalId, AccountDetails details, Long ticketId) {
+        String portalId = explicitPortalId.orElseGet(() -> details != null && details.getPortalId() != null ? String.valueOf(details.getPortalId()) : null);
+        if (portalId == null) {
+            return null;
+        }
+        String uiDomain = details != null && details.getUiDomain() != null ? details.getUiDomain() : DEFAULT_UI_DOMAIN;
+        return buildTicketUrl(uiDomain, portalId, ticketId);
+    }
+
+    private String ticketUrl(RunContext runContext, Logger logger, Optional<String> explicitPortalId, Long ticketId) {
+        AccountDetails details = null;
+        try {
+            HttpRequest.HttpRequestBuilder request = HttpRequest.builder()
+                .uri(URI.create(HUBSPOT_URL + ACCOUNT_DETAILS_ENDPOINT))
+                .method("GET");
+            getAuthorizedRequest(runContext, request);
+            details = makeCall(runContext, request, AccountDetails.class);
+        } catch (Exception e) {
+            logger.warn("Could not look up the HubSpot account details, so the ticket URL may use the default domain or be unset; set `portalId` to provide it: {}", e.getMessage());
+        }
+        return resolveTicketUrl(explicitPortalId, details, ticketId);
+    }
+
+    @Builder
+    @Getter
+    public static class Output implements io.kestra.core.models.tasks.Output {
+        @Schema(
+            title = "Created record ID"
+        )
+        @TicketingField(role = TicketingField.Role.TICKET_KEY)
+        private Long id;
+
+        @Schema(
+            title = "URI of stored properties",
+            description = "Internal storage URI containing the created record properties."
+        )
+        private URI uri;
+
+        @Schema(
+            title = "Ticket URL",
+            description = "Link that opens the created ticket in the HubSpot UI. Empty when the portal ID is not set and could not be looked up."
+        )
+        @TicketingField(role = TicketingField.Role.TICKET_URL)
+        private String url;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    static class AccountDetails {
+        private Long portalId;
+        private String uiDomain;
     }
 }
