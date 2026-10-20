@@ -138,7 +138,7 @@ public class Update extends AbstractUpdateTask implements RunnableTask<AbstractU
     public Output run(RunContext runContext) throws Exception {
         Logger logger = runContext.logger();
 
-        String dealIdValue = runContext.render(this.dealId).as(String.class).orElseThrow();
+        String rDealId = runContext.render(this.dealId).as(String.class).orElseThrow();
 
         DealRequest request = new DealRequest();
 
@@ -169,7 +169,7 @@ public class Update extends AbstractUpdateTask implements RunnableTask<AbstractU
             request.setAdditionalProperties(additionalProps);
         }
 
-        URI uri = URI.create(buildHubspotURL() + "/" + dealIdValue);
+        URI uri = URI.create(buildHubspotURL() + "/" + rDealId);
 
         String requestBody = mapper.writeValueAsString(request);
 
