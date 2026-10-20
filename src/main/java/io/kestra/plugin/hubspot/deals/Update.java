@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import io.kestra.core.http.HttpRequest;
 import io.kestra.core.models.annotations.Example;
 import io.kestra.core.models.annotations.Plugin;
+import io.kestra.core.models.annotations.PluginProperty;
 import io.kestra.core.models.property.Property;
 import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.runners.RunContext;
@@ -22,7 +23,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
-import io.kestra.core.models.annotations.PluginProperty;
 
 @SuperBuilder
 @ToString
@@ -38,7 +38,7 @@ import io.kestra.core.models.annotations.PluginProperty;
         @Example(
             full = true,
             code = """
-                id: hubspot_deals_create
+                id: hubspot_deals_update
                 namespace: company.team
 
                 inputs:
@@ -46,10 +46,10 @@ import io.kestra.core.models.annotations.PluginProperty;
                     type: STRING
 
                 tasks:
-                  - id: create_deal
+                  - id: update_deal
                     type: io.kestra.plugin.hubspot.deals.Update
                     apiKey: "{{ secret('HUBSPOT_API_KEY') }}"
-                    dealId: {{ inputs.deal_id }}
+                    dealId: "{{ inputs.deal_id }}"
                     name: "Enterprise Software Deal"
                     amount: 50000
                     closeDate: "2024-12-31"
@@ -138,6 +138,8 @@ public class Update extends AbstractUpdateTask implements RunnableTask<AbstractU
     public Output run(RunContext runContext) throws Exception {
         Logger logger = runContext.logger();
 
+        String rDealId = runContext.render(this.dealId).as(String.class).orElseThrow();
+
         DealRequest request = new DealRequest();
 
         runContext.render(this.name).as(String.class).ifPresent(request::setName);
@@ -167,7 +169,7 @@ public class Update extends AbstractUpdateTask implements RunnableTask<AbstractU
             request.setAdditionalProperties(additionalProps);
         }
 
-        URI uri = URI.create(buildHubspotURL() + "/" + dealId);
+        URI uri = URI.create(buildHubspotURL() + "/" + rDealId);
 
         String requestBody = mapper.writeValueAsString(request);
 
