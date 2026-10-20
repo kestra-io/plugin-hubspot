@@ -1,5 +1,7 @@
 package io.kestra.plugin.hubspot.deals;
 
+import java.util.Map;
+
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -67,13 +69,13 @@ public class DealIT extends AbstractTaskIT {
     @Test
     @Order(3)
     void shouldUpdateCompanyWhenValidIdIsGiven() throws Exception {
-        RunContext runContext = runContextFactory.of();
-
         assertThat(dealId, is(notNullValue()));
+
+        RunContext runContext = runContextFactory.of(Map.of("deal_id", String.valueOf(dealId)));
 
         Update task = Update.builder()
             .apiKey(Property.ofValue(getApiKey()))
-            .dealId(Property.ofValue(String.valueOf(dealId)))
+            .dealId(Property.ofExpression("{{ deal_id }}"))
             .name(Property.ofValue("updated deal name"))
             .build();
 
