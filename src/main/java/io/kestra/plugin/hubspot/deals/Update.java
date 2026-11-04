@@ -154,15 +154,14 @@ public class Update extends AbstractUpdateTask implements RunnableTask<AbstractU
 
         runContext.render(this.dealType).as(String.class).ifPresent(request::setDealType);
 
-        if (this.associatedCompanyIds != null) {
-            List<Long> companyIds = runContext.render(this.associatedCompanyIds).asList(Long.class);
-            request.setAssociatedCompanyIds(companyIds);
-        }
-
-        if (this.associatedContactIds != null) {
-            List<Long> contactIds = runContext.render(this.associatedContactIds).asList(Long.class);
-            request.setAssociatedContactIds(contactIds);
-        }
+        // The PATCH endpoint only accepts properties, so associations are created
+        // after the update through the associations API (see associate()).
+        List<Long> companyIds = this.associatedCompanyIds != null
+            ? runContext.render(this.associatedCompanyIds).asList(Long.class)
+            : List.of();
+        List<Long> contactIds = this.associatedContactIds != null
+            ? runContext.render(this.associatedContactIds).asList(Long.class)
+            : List.of();
 
         if (this.additionalProperties != null) {
             Map<String, Object> additionalProps = runContext.render(this.additionalProperties).asMap(String.class, Object.class);
@@ -185,7 +184,14 @@ public class Update extends AbstractUpdateTask implements RunnableTask<AbstractU
 
         HubspotResponse response = makeCall(runContext, requestBuilder, HubspotResponse.class);
 
-        logger.info("Created HubSpot record: {}", response);
+        logger.info("Updated HubSpot record: {}", response);
+
+        for (Long companyId : companyIds) {
+            associate(runContext, rDealId, "companies", companyId);
+        }
+        for (Long contactId : contactIds) {
+            associate(runContext, rDealId, "contacts", contactId);
+        }
 
         URI fileURI = store(runContext, List.of(response.getProperties()));
 
@@ -193,6 +199,26 @@ public class Update extends AbstractUpdateTask implements RunnableTask<AbstractU
             .id(response.getId())
             .uri(fileURI)
             .build();
+    }
+
+    /**
+     * Creates the default (HUBSPOT_DEFINED) association between the deal and a record,
+     * as described in https://developers.hubspot.com/docs/api/crm/associations.
+     */
+    private void associate(RunContext runContext, String dealId, String toObjectType, Long toObjectId) throws Exception {
+        HttpRequest.HttpRequestBuilder requestBuilder = HttpRequest.builder()
+            .uri(associationUri(dealId, toObjectType, toObjectId))
+            .addHeader("Content-Type", JSON_CONTENT_TYPE)
+            .method("PUT");
+
+        getAuthorizedRequest(runContext, requestBuilder);
+
+        makeCall(runContext, requestBuilder, Map.class);
+        runContext.logger().info("Associated deal {} with {} {}", dealId, toObjectType, toObjectId);
+    }
+
+    static URI associationUri(String dealId, String toObjectType, Long toObjectId) {
+        return URI.create(HUBSPOT_URL + "/crm/v4/objects/deals/" + dealId + "/associations/default/" + toObjectType + "/" + toObjectId);
     }
 
     @Override

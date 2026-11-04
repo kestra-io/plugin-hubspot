@@ -7,6 +7,7 @@ import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.Data;
 
@@ -14,7 +15,14 @@ import lombok.Data;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DealRequest {
 
+    /** HubSpot-defined association type for deal to company. */
+    public static final long DEAL_TO_COMPANY = 5L;
+    /** HubSpot-defined association type for deal to contact. */
+    public static final long DEAL_TO_CONTACT = 3L;
+
     private Map<String, Object> properties = new HashMap<>();
+
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<DealAssociation> associations = new ArrayList<>();
 
     @JsonIgnore
@@ -51,7 +59,7 @@ public class DealRequest {
     public void setAssociatedCompanyIds(List<Long> companyIds) {
         if (companyIds != null) {
             for (Long companyId : companyIds) {
-                associations.add(new DealAssociation("company", companyId));
+                associations.add(new DealAssociation(companyId, DEAL_TO_COMPANY));
             }
         }
     }
@@ -60,7 +68,7 @@ public class DealRequest {
     public void setAssociatedContactIds(List<Long> contactIds) {
         if (contactIds != null) {
             for (Long contactId : contactIds) {
-                associations.add(new DealAssociation("contact", contactId));
+                associations.add(new DealAssociation(contactId, DEAL_TO_CONTACT));
             }
         }
     }
@@ -72,14 +80,24 @@ public class DealRequest {
         }
     }
 
+    /**
+     * One entry of the CRM v3 create `associations` input:
+     * {"to":{"id":"123"},"types":[{"associationCategory":"HUBSPOT_DEFINED","associationTypeId":5}]}
+     */
     @Data
     public static class DealAssociation {
-        private final String to;
-        private final Long id;
+        private final Map<String, String> to;
+        private final List<AssociationType> types;
 
-        public DealAssociation(String to, Long id) {
-            this.to = to;
-            this.id = id;
+        public DealAssociation(Long id, long associationTypeId) {
+            this.to = Map.of("id", String.valueOf(id));
+            this.types = List.of(new AssociationType("HUBSPOT_DEFINED", associationTypeId));
         }
+    }
+
+    @Data
+    public static class AssociationType {
+        private final String associationCategory;
+        private final long associationTypeId;
     }
 }
