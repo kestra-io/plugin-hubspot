@@ -154,8 +154,7 @@ public class Update extends AbstractUpdateTask implements RunnableTask<AbstractU
 
         runContext.render(this.dealType).as(String.class).ifPresent(request::setDealType);
 
-        // The PATCH endpoint only accepts properties, so associations are created
-        // after the update through the associations API (see associate()).
+        // PATCH only accepts properties; associations are created afterwards by associate().
         List<Long> companyIds = this.associatedCompanyIds != null
             ? runContext.render(this.associatedCompanyIds).asList(Long.class)
             : List.of();
@@ -201,12 +200,9 @@ public class Update extends AbstractUpdateTask implements RunnableTask<AbstractU
             .build();
     }
 
-    /**
-     * Creates the default (HUBSPOT_DEFINED) association between the deal and a record,
-     * as described in https://developers.hubspot.com/docs/api/crm/associations.
-     */
+    // Default (HUBSPOT_DEFINED) association: https://developers.hubspot.com/docs/api/crm/associations
     private void associate(RunContext runContext, String dealId, String toObjectType, Long toObjectId) throws Exception {
-        HttpRequest.HttpRequestBuilder requestBuilder = HttpRequest.builder()
+        var requestBuilder = HttpRequest.builder()
             .uri(associationUri(dealId, toObjectType, toObjectId))
             .addHeader("Content-Type", JSON_CONTENT_TYPE)
             .method("PUT");

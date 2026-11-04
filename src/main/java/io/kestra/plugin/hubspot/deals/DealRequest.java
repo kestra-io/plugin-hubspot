@@ -15,9 +15,8 @@ import lombok.Data;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DealRequest {
 
-    /** HubSpot-defined association type for deal to company. */
+    // HubSpot-defined association types (deal to company, deal to contact).
     public static final long DEAL_TO_COMPANY = 5L;
-    /** HubSpot-defined association type for deal to contact. */
     public static final long DEAL_TO_CONTACT = 3L;
 
     private Map<String, Object> properties = new HashMap<>();
@@ -80,10 +79,7 @@ public class DealRequest {
         }
     }
 
-    /**
-     * One entry of the CRM v3 create `associations` input:
-     * {"to":{"id":"123"},"types":[{"associationCategory":"HUBSPOT_DEFINED","associationTypeId":5}]}
-     */
+    // CRM v3 shape: {"to":{"id":"123"},"types":[{"associationCategory":"HUBSPOT_DEFINED","associationTypeId":5}]}
     @Data
     public static class DealAssociation {
         private final Map<String, String> to;
