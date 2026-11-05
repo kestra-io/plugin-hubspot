@@ -63,14 +63,32 @@ class DealRequestTest {
     }
 
     @Test
-    void shouldBuildTheDefaultAssociationUriForUpdates() {
+    void shouldLinkEveryCompanyAsUnlabeledNotPrimary() throws Exception {
+        var request = new DealRequest();
+        request.setAssociatedCompanyIds(List.of(123L, 124L));
+
+        var associations = MAPPER.readTree(MAPPER.writeValueAsString(request)).get("associations");
+
+        assertThat(associations.size(), is(2));
+        for (var association : associations) {
+            assertThat(association.get("types").get(0).get("associationTypeId").asLong(), is(341L));
+        }
+    }
+
+    @Test
+    void shouldBuildOneBatchAssociationCallPerObjectType() throws Exception {
         assertThat(
-            Update.associationUri("987", "companies", 123L).toString(),
-            is("https://api.hubapi.com/crm/v4/objects/deals/987/associations/default/companies/123")
+            Update.associationUri("companies").toString(),
+            is("https://api.hubapi.com/crm/v4/associations/deals/companies/batch/associate/default")
         );
-        assertThat(
-            Update.associationUri("987", "contacts", 456L).toString(),
-            is("https://api.hubapi.com/crm/v4/objects/deals/987/associations/default/contacts/456")
-        );
+
+        var body = MAPPER.readTree(MAPPER.writeValueAsString(Update.associationBody("987", List.of(123L, 124L))));
+        var inputs = body.get("inputs");
+
+        assertThat(inputs.size(), is(2));
+        assertThat(inputs.get(0).get("from").get("id").asText(), is("987"));
+        assertThat(inputs.get(0).get("to").get("id").asText(), is("123"));
+        assertThat(inputs.get(1).get("to").get("id").asText(), is("124"));
+        assertThat(inputs.get(1).get("to").get("id").isTextual(), is(true));
     }
 }

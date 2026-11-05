@@ -115,7 +115,10 @@ public class Update extends AbstractUpdateTask implements RunnableTask<AbstractU
 
     @Schema(
         title = "Associated company IDs",
-        description = "Optional list of HubSpot company record IDs to associate."
+        description = """
+            Optional list of HubSpot company record IDs to associate.
+            Each one is linked with the unlabeled `Deal to company` association (type 341), so none of them becomes the primary company; set the primary company in HubSpot if you need one.
+            """
     )
     @PluginProperty(group = "advanced")
     private Property<List<Long>> associatedCompanyIds;
@@ -185,12 +188,8 @@ public class Update extends AbstractUpdateTask implements RunnableTask<AbstractU
 
         logger.info("Updated HubSpot record: {}", response);
 
-        for (Long companyId : companyIds) {
-            associate(runContext, rDealId, "companies", companyId);
-        }
-        for (Long contactId : contactIds) {
-            associate(runContext, rDealId, "contacts", contactId);
-        }
+        associate(runContext, rDealId, "companies", companyIds);
+        associate(runContext, rDealId, "contacts", contactIds);
 
         URI fileURI = store(runContext, List.of(response.getProperties()));
 
@@ -200,21 +199,39 @@ public class Update extends AbstractUpdateTask implements RunnableTask<AbstractU
             .build();
     }
 
-    // Default (HUBSPOT_DEFINED) association: https://developers.hubspot.com/docs/api/crm/associations
-    private void associate(RunContext runContext, String dealId, String toObjectType, Long toObjectId) throws Exception {
+    // One batch call per object type: https://developers.hubspot.com/docs/api-reference/crm-associations-v4/guide
+    private void associate(RunContext runContext, String dealId, String toObjectType, List<Long> toObjectIds) throws Exception {
+        if (toObjectIds.isEmpty()) {
+            return;
+        }
+
         var requestBuilder = HttpRequest.builder()
-            .uri(associationUri(dealId, toObjectType, toObjectId))
+            .uri(associationUri(toObjectType))
             .addHeader("Content-Type", JSON_CONTENT_TYPE)
-            .method("PUT");
+            .method("POST")
+            .body(HttpRequest.StringRequestBody.builder().content(mapper.writeValueAsString(associationBody(dealId, toObjectIds))).build());
 
         getAuthorizedRequest(runContext, requestBuilder);
 
-        makeCall(runContext, requestBuilder, Map.class);
-        runContext.logger().info("Associated deal {} with {} {}", dealId, toObjectType, toObjectId);
+        try {
+            makeCall(runContext, requestBuilder, Map.class);
+        } catch (Exception e) {
+            throw new IllegalStateException(
+                "Deal " + dealId + " was updated, but associating it with " + toObjectType + " " + toObjectIds + " failed: " + e.getMessage(), e
+            );
+        }
+        runContext.logger().info("Associated deal {} with {} {}", dealId, toObjectType, toObjectIds);
     }
 
-    static URI associationUri(String dealId, String toObjectType, Long toObjectId) {
-        return URI.create(HUBSPOT_URL + "/crm/v4/objects/deals/" + dealId + "/associations/default/" + toObjectType + "/" + toObjectId);
+    static URI associationUri(String toObjectType) {
+        return URI.create(HUBSPOT_URL + "/crm/v4/associations/deals/" + toObjectType + "/batch/associate/default");
+    }
+
+    static Map<String, Object> associationBody(String dealId, List<Long> toObjectIds) {
+        var inputs = toObjectIds.stream()
+            .map(id -> Map.of("from", Map.of("id", dealId), "to", Map.of("id", String.valueOf(id))))
+            .toList();
+        return Map.of("inputs", inputs);
     }
 
     @Override

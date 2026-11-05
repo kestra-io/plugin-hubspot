@@ -15,8 +15,8 @@ import lombok.Data;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DealRequest {
 
-    // HubSpot-defined association types (deal to company, deal to contact).
-    public static final long DEAL_TO_COMPANY = 5L;
+    // https://developers.hubspot.com/docs/api-reference/crm-associations-v4/guide#deal-to-object (5 would be the primary company)
+    public static final long DEAL_TO_COMPANY = 341L;
     public static final long DEAL_TO_CONTACT = 3L;
 
     private Map<String, Object> properties = new HashMap<>();

@@ -108,7 +108,10 @@ public class Create extends AbstractCreateTask implements RunnableTask<AbstractC
 
     @Schema(
         title = "Associated company IDs",
-        description = "Optional list of HubSpot company record IDs to associate."
+        description = """
+            Optional list of HubSpot company record IDs to associate.
+            Each one is linked with the unlabeled `Deal to company` association (type 341), so none of them becomes the primary company; set the primary company in HubSpot if you need one.
+            """
     )
     @PluginProperty(group = "advanced")
     private Property<List<Long>> associatedCompanyIds;
