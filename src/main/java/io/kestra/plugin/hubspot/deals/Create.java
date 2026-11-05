@@ -118,7 +118,7 @@ public class Create extends AbstractCreateTask implements RunnableTask<AbstractC
 
     @Schema(
         title = "Associated contact IDs",
-        description = "Optional list of HubSpot contact record IDs to associate."
+        description = "Optional list of HubSpot contact record IDs to associate, with the default `Deal to contact` association (type 3)."
     )
     @PluginProperty(group = "advanced")
     private Property<List<Long>> associatedContactIds;
@@ -149,13 +149,13 @@ public class Create extends AbstractCreateTask implements RunnableTask<AbstractC
         runContext.render(this.dealType).as(String.class).ifPresent(request::setDealType);
 
         if (this.associatedCompanyIds != null) {
-            List<Long> companyIds = DealRequest.ids(runContext.render(this.associatedCompanyIds).asList(Object.class));
-            request.setAssociatedCompanyIds(companyIds);
+            List<Long> rCompanyIds = DealRequest.ids(runContext.render(this.associatedCompanyIds).asList(Object.class));
+            request.setAssociatedCompanyIds(rCompanyIds);
         }
 
         if (this.associatedContactIds != null) {
-            List<Long> contactIds = DealRequest.ids(runContext.render(this.associatedContactIds).asList(Object.class));
-            request.setAssociatedContactIds(contactIds);
+            List<Long> rContactIds = DealRequest.ids(runContext.render(this.associatedContactIds).asList(Object.class));
+            request.setAssociatedContactIds(rContactIds);
         }
 
         if (this.additionalProperties != null) {

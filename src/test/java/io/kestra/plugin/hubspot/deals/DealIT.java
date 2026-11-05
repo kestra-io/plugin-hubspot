@@ -2,6 +2,8 @@ package io.kestra.plugin.hubspot.deals;
 
 import java.net.URI;
 import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -169,13 +171,13 @@ public class DealIT extends AbstractTaskIT {
     }
 
     private static List<String> associatedIds(String dealId, String toObjectType) throws Exception {
-        var request = java.net.http.HttpRequest.newBuilder(
+        var request = HttpRequest.newBuilder(
                 URI.create("https://api.hubapi.com/crm/v4/objects/deals/" + dealId + "/associations/" + toObjectType))
             .header("Authorization", "Bearer " + getApiKey())
             .GET()
             .build();
         try (var client = HttpClient.newHttpClient()) {
-            var body = client.send(request, java.net.http.HttpResponse.BodyHandlers.ofString()).body();
+            var body = client.send(request, HttpResponse.BodyHandlers.ofString()).body();
             var ids = new ArrayList<String>();
             JacksonMapper.ofJson().readTree(body).get("results").forEach(r -> ids.add(r.get("toObjectId").asText()));
             return ids;

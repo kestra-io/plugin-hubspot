@@ -89,7 +89,7 @@ public class DealRequest {
         }
     }
 
-    // CRM v3 shape: {"to":{"id":"123"},"types":[{"associationCategory":"HUBSPOT_DEFINED","associationTypeId":5}]}
+    // CRM v3 shape: {"to":{"id":"123"},"types":[{"associationCategory":"HUBSPOT_DEFINED","associationTypeId":341}]}
     @Data
     public static class DealAssociation {
         private final Map<String, String> to;

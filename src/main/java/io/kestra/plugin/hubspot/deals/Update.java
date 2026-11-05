@@ -31,7 +31,10 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @Schema(
     title = "Update HubSpot deal properties",
-    description = "PATCH an existing deal via HubSpot CRM v3. Requires record ID and updates only provided fields; stores returned properties to internal storage."
+    description = """
+        PATCH an existing deal via HubSpot CRM v3. Requires record ID and updates only provided fields; stores returned properties to internal storage.
+        If `associatedCompanyIds` or `associatedContactIds` are set, the deal is then linked to them with one batch call per object type. Existing associations are never removed.
+        """
 )
 @Plugin(
     examples = {
@@ -118,6 +121,7 @@ public class Update extends AbstractUpdateTask implements RunnableTask<AbstractU
         description = """
             Optional list of HubSpot company record IDs to associate.
             Each one is linked with the unlabeled `Deal to company` association (type 341), so none of them becomes the primary company; set the primary company in HubSpot if you need one.
+            `Update` adds these associations with a separate batch call after the PATCH, and never removes associations the deal already has.
             """
     )
     @PluginProperty(group = "advanced")
@@ -125,7 +129,10 @@ public class Update extends AbstractUpdateTask implements RunnableTask<AbstractU
 
     @Schema(
         title = "Associated contact IDs",
-        description = "Optional list of HubSpot contact record IDs to associate."
+        description = """
+            Optional list of HubSpot contact record IDs to associate, with the default `Deal to contact` association (type 3).
+            `Update` adds these associations with a separate batch call after the PATCH, and never removes associations the deal already has.
+            """
     )
     @PluginProperty(group = "advanced")
     private Property<List<Long>> associatedContactIds;
@@ -158,10 +165,10 @@ public class Update extends AbstractUpdateTask implements RunnableTask<AbstractU
         runContext.render(this.dealType).as(String.class).ifPresent(request::setDealType);
 
         // PATCH only accepts properties; associations are created afterwards by associate().
-        List<Long> companyIds = this.associatedCompanyIds != null
+        List<Long> rCompanyIds = this.associatedCompanyIds != null
             ? DealRequest.ids(runContext.render(this.associatedCompanyIds).asList(Object.class))
             : List.of();
-        List<Long> contactIds = this.associatedContactIds != null
+        List<Long> rContactIds = this.associatedContactIds != null
             ? DealRequest.ids(runContext.render(this.associatedContactIds).asList(Object.class))
             : List.of();
 
@@ -188,8 +195,8 @@ public class Update extends AbstractUpdateTask implements RunnableTask<AbstractU
 
         logger.info("Updated HubSpot record: {}", response);
 
-        associate(runContext, rDealId, "companies", companyIds);
-        associate(runContext, rDealId, "contacts", contactIds);
+        associate(runContext, rDealId, "companies", rCompanyIds);
+        associate(runContext, rDealId, "contacts", rContactIds);
 
         URI fileURI = store(runContext, List.of(response.getProperties()));
 
@@ -213,14 +220,33 @@ public class Update extends AbstractUpdateTask implements RunnableTask<AbstractU
 
         getAuthorizedRequest(runContext, requestBuilder);
 
+        Map<?, ?> rResponse;
         try {
-            makeCall(runContext, requestBuilder, Map.class);
+            rResponse = makeCall(runContext, requestBuilder, Map.class);
         } catch (Exception e) {
             throw new IllegalStateException(
                 "Deal " + dealId + " was updated, but associating it with " + toObjectType + " " + toObjectIds + " failed: " + e.getMessage(), e
             );
         }
+        // A 207 Multi-Status is still a 2xx, so rejected inputs only show up in the body.
+        var rejected = rejectedAssociations(rResponse);
+        if (!rejected.isEmpty()) {
+            throw new IllegalStateException(
+                "Deal " + dealId + " was updated, but HubSpot rejected some " + toObjectType + " associations: " + String.join("; ", rejected)
+            );
+        }
         runContext.logger().info("Associated deal {} with {} {}", dealId, toObjectType, toObjectIds);
+    }
+
+    static List<String> rejectedAssociations(Map<?, ?> response) {
+        if (response == null || !(response.get("errors") instanceof List<?> errors)) {
+            return List.of();
+        }
+        return errors.stream()
+            .map(error -> error instanceof Map<?, ?> map
+                ? map.get("message") + (map.get("context") != null ? " " + map.get("context") : "")
+                : String.valueOf(error))
+            .toList();
     }
 
     static URI associationUri(String toObjectType) {

@@ -12,6 +12,6 @@ Set `apiKey` for API key auth or `oauthToken` for OAuth token auth — they are 
 
 **Companies** — `companies.Create` creates a company with `name` and `domain` (both required). `companies.Get`, `companies.Search`, `companies.Update`, and `companies.Delete` follow the same pattern using `companyId`.
 
-**Deals** — `deals.Create` creates a deal with `name`, `pipeline`, and `stage` (all required), plus optional `amount`, `closeDate`, `dealType`, and contact/company association IDs. `deals.Get`, `deals.Search`, `deals.Update`, and `deals.Delete` use `dealId`.
+**Deals** — `deals.Create` creates a deal with `name`, `pipeline`, and `stage` (all required), plus optional `amount`, `closeDate`, `dealType`, and contact/company association IDs. `deals.Get`, `deals.Search`, `deals.Update`, and `deals.Delete` use `dealId`. `deals.Update` also accepts company and contact association IDs: after the PATCH it links them with one batch call per object type, and never removes existing associations.
 
 **Tickets** — `tickets.Create` creates a support ticket with `subject` (required) and optional `content`, `pipeline`, `stage`, and `priority` (`LOW`, `MEDIUM`, or `HIGH`).
