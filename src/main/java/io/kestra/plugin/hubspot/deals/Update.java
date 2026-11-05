@@ -159,10 +159,10 @@ public class Update extends AbstractUpdateTask implements RunnableTask<AbstractU
 
         // PATCH only accepts properties; associations are created afterwards by associate().
         List<Long> companyIds = this.associatedCompanyIds != null
-            ? runContext.render(this.associatedCompanyIds).asList(Long.class)
+            ? DealRequest.ids(runContext.render(this.associatedCompanyIds).asList(Object.class))
             : List.of();
         List<Long> contactIds = this.associatedContactIds != null
-            ? runContext.render(this.associatedContactIds).asList(Long.class)
+            ? DealRequest.ids(runContext.render(this.associatedContactIds).asList(Object.class))
             : List.of();
 
         if (this.additionalProperties != null) {

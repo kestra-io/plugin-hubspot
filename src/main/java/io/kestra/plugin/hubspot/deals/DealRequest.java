@@ -54,6 +54,16 @@ public class DealRequest {
         properties.put("dealtype", dealType);
     }
 
+    // YAML numbers that fit in an int render as Integer, and IDs may also come as strings.
+    public static List<Long> ids(List<?> rendered) {
+        if (rendered == null) {
+            return List.of();
+        }
+        return rendered.stream()
+            .map(id -> id instanceof Number number ? number.longValue() : Long.valueOf(id.toString().trim()))
+            .toList();
+    }
+
     @JsonIgnore
     public void setAssociatedCompanyIds(List<Long> companyIds) {
         if (companyIds != null) {

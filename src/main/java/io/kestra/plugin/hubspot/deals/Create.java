@@ -149,12 +149,12 @@ public class Create extends AbstractCreateTask implements RunnableTask<AbstractC
         runContext.render(this.dealType).as(String.class).ifPresent(request::setDealType);
 
         if (this.associatedCompanyIds != null) {
-            List<Long> companyIds = runContext.render(this.associatedCompanyIds).asList(Long.class);
+            List<Long> companyIds = DealRequest.ids(runContext.render(this.associatedCompanyIds).asList(Object.class));
             request.setAssociatedCompanyIds(companyIds);
         }
 
         if (this.associatedContactIds != null) {
-            List<Long> contactIds = runContext.render(this.associatedContactIds).asList(Long.class);
+            List<Long> contactIds = DealRequest.ids(runContext.render(this.associatedContactIds).asList(Object.class));
             request.setAssociatedContactIds(contactIds);
         }
 
