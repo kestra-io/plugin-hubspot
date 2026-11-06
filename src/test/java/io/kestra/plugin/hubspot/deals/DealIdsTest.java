@@ -10,6 +10,8 @@ import io.kestra.core.runners.RunContextFactory;
 
 import jakarta.inject.Inject;
 
+import static org.hamcrest.Matchers.containsString;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
@@ -26,7 +28,7 @@ class DealIdsTest {
         // YAML `- 123` arrives as an Integer, which used to fail with a ClassCastException.
         Property<List<Long>> ids = (Property) Property.ofValue(List.of(123, 124));
 
-        var rendered = DealRequest.ids(runContext.render(ids).asList(Object.class));
+        var rendered = DealRequest.ids("associatedCompanyIds", runContext.render(ids).asList(Object.class));
 
         assertThat(rendered, is(List.of(123L, 124L)));
     }
@@ -38,7 +40,7 @@ class DealIdsTest {
         // Quoted IDs, or IDs taken from another task's output, arrive as strings.
         Property<List<Long>> ids = (Property) Property.ofValue(List.of("123", "9876543210"));
 
-        var rendered = DealRequest.ids(runContext.render(ids).asList(Object.class));
+        var rendered = DealRequest.ids("associatedCompanyIds", runContext.render(ids).asList(Object.class));
 
         assertThat(rendered, is(List.of(123L, 9876543210L)));
     }
@@ -46,8 +48,16 @@ class DealIdsTest {
     @Test
     void shouldBuildAssociationsFromIntegerIds() throws Exception {
         var request = new DealRequest();
-        request.setAssociatedCompanyIds(DealRequest.ids(List.of(123, 124)));
+        request.setAssociatedCompanyIds(DealRequest.ids("associatedCompanyIds", List.of(123, 124)));
 
         assertThat(request.getAssociations().size(), is(2));
+    }
+
+    @Test
+    void shouldNameThePropertyWhenAnIdIsNotANumber() {
+        var e = assertThrows(IllegalArgumentException.class, () -> DealRequest.ids("associatedContactIds", List.of("acme")));
+
+        assertThat(e.getMessage(), containsString("associatedContactIds"));
+        assertThat(e.getMessage(), containsString("acme"));
     }
 }

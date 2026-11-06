@@ -165,12 +165,12 @@ public class Update extends AbstractUpdateTask implements RunnableTask<AbstractU
         runContext.render(this.dealType).as(String.class).ifPresent(request::setDealType);
 
         // PATCH only accepts properties; associations are created afterwards by associate().
-        List<Long> rCompanyIds = this.associatedCompanyIds != null
-            ? DealRequest.ids(runContext.render(this.associatedCompanyIds).asList(Object.class))
-            : List.of();
-        List<Long> rContactIds = this.associatedContactIds != null
-            ? DealRequest.ids(runContext.render(this.associatedContactIds).asList(Object.class))
-            : List.of();
+        var rCompanyIds = this.associatedCompanyIds != null
+            ? DealRequest.ids("associatedCompanyIds", runContext.render(this.associatedCompanyIds).asList(Object.class))
+            : List.<Long>of();
+        var rContactIds = this.associatedContactIds != null
+            ? DealRequest.ids("associatedContactIds", runContext.render(this.associatedContactIds).asList(Object.class))
+            : List.<Long>of();
 
         if (this.additionalProperties != null) {
             Map<String, Object> additionalProps = runContext.render(this.additionalProperties).asMap(String.class, Object.class);

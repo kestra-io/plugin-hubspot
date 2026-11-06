@@ -55,13 +55,27 @@ public class DealRequest {
     }
 
     // YAML numbers that fit in an int render as Integer, and IDs may also come as strings.
-    public static List<Long> ids(List<?> rendered) {
+    public static List<Long> ids(String property, List<?> rendered) {
         if (rendered == null) {
             return List.of();
         }
         return rendered.stream()
-            .map(id -> id instanceof Number number ? number.longValue() : Long.valueOf(id.toString().trim()))
+            .map(id -> toId(property, id))
             .toList();
+    }
+
+    private static Long toId(String property, Object id) {
+        if (id instanceof Number number) {
+            return number.longValue();
+        }
+        if (id == null) {
+            throw new IllegalArgumentException("`" + property + "` contains an empty value; expected HubSpot record IDs");
+        }
+        try {
+            return Long.valueOf(id.toString().trim());
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("`" + property + "` contains '" + id + "', which is not a HubSpot record ID (a number)", e);
+        }
     }
 
     @JsonIgnore
