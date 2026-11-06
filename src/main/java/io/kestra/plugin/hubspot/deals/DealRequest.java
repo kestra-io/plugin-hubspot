@@ -7,6 +7,7 @@ import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.Data;
 
@@ -14,7 +15,13 @@ import lombok.Data;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DealRequest {
 
+    // https://developers.hubspot.com/docs/api-reference/crm-associations-v4/guide#deal-to-object (5 would be the primary company)
+    public static final long DEAL_TO_COMPANY = 341L;
+    public static final long DEAL_TO_CONTACT = 3L;
+
     private Map<String, Object> properties = new HashMap<>();
+
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<DealAssociation> associations = new ArrayList<>();
 
     @JsonIgnore
@@ -47,11 +54,35 @@ public class DealRequest {
         properties.put("dealtype", dealType);
     }
 
+    // YAML numbers that fit in an int render as Integer, and IDs may also come as strings.
+    public static List<Long> ids(String property, List<?> rendered) {
+        if (rendered == null) {
+            return List.of();
+        }
+        return rendered.stream()
+            .map(id -> toId(property, id))
+            .toList();
+    }
+
+    private static Long toId(String property, Object id) {
+        if (id instanceof Number number) {
+            return number.longValue();
+        }
+        if (id == null) {
+            throw new IllegalArgumentException("`" + property + "` contains an empty value; expected HubSpot record IDs");
+        }
+        try {
+            return Long.valueOf(id.toString().trim());
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("`" + property + "` contains '" + id + "', which is not a HubSpot record ID (a number)", e);
+        }
+    }
+
     @JsonIgnore
     public void setAssociatedCompanyIds(List<Long> companyIds) {
         if (companyIds != null) {
             for (Long companyId : companyIds) {
-                associations.add(new DealAssociation("company", companyId));
+                associations.add(new DealAssociation(companyId, DEAL_TO_COMPANY));
             }
         }
     }
@@ -60,7 +91,7 @@ public class DealRequest {
     public void setAssociatedContactIds(List<Long> contactIds) {
         if (contactIds != null) {
             for (Long contactId : contactIds) {
-                associations.add(new DealAssociation("contact", contactId));
+                associations.add(new DealAssociation(contactId, DEAL_TO_CONTACT));
             }
         }
     }
@@ -72,14 +103,21 @@ public class DealRequest {
         }
     }
 
+    // CRM v3 shape: {"to":{"id":"123"},"types":[{"associationCategory":"HUBSPOT_DEFINED","associationTypeId":341}]}
     @Data
     public static class DealAssociation {
-        private final String to;
-        private final Long id;
+        private final Map<String, String> to;
+        private final List<AssociationType> types;
 
-        public DealAssociation(String to, Long id) {
-            this.to = to;
-            this.id = id;
+        public DealAssociation(Long id, long associationTypeId) {
+            this.to = Map.of("id", String.valueOf(id));
+            this.types = List.of(new AssociationType("HUBSPOT_DEFINED", associationTypeId));
         }
+    }
+
+    @Data
+    public static class AssociationType {
+        private final String associationCategory;
+        private final long associationTypeId;
     }
 }

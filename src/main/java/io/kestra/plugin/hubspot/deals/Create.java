@@ -108,14 +108,17 @@ public class Create extends AbstractCreateTask implements RunnableTask<AbstractC
 
     @Schema(
         title = "Associated company IDs",
-        description = "Optional list of HubSpot company record IDs to associate."
+        description = """
+            Optional list of HubSpot company record IDs to associate.
+            Each one is linked with the unlabeled `Deal to company` association (type 341), so none of them becomes the primary company; set the primary company in HubSpot if you need one.
+            """
     )
     @PluginProperty(group = "advanced")
     private Property<List<Long>> associatedCompanyIds;
 
     @Schema(
         title = "Associated contact IDs",
-        description = "Optional list of HubSpot contact record IDs to associate."
+        description = "Optional list of HubSpot contact record IDs to associate, with the default `Deal to contact` association (type 3)."
     )
     @PluginProperty(group = "advanced")
     private Property<List<Long>> associatedContactIds;
@@ -146,13 +149,13 @@ public class Create extends AbstractCreateTask implements RunnableTask<AbstractC
         runContext.render(this.dealType).as(String.class).ifPresent(request::setDealType);
 
         if (this.associatedCompanyIds != null) {
-            List<Long> companyIds = runContext.render(this.associatedCompanyIds).asList(Long.class);
-            request.setAssociatedCompanyIds(companyIds);
+            var rCompanyIds = DealRequest.ids("associatedCompanyIds", runContext.render(this.associatedCompanyIds).asList(Object.class));
+            request.setAssociatedCompanyIds(rCompanyIds);
         }
 
         if (this.associatedContactIds != null) {
-            List<Long> contactIds = runContext.render(this.associatedContactIds).asList(Long.class);
-            request.setAssociatedContactIds(contactIds);
+            var rContactIds = DealRequest.ids("associatedContactIds", runContext.render(this.associatedContactIds).asList(Object.class));
+            request.setAssociatedContactIds(rContactIds);
         }
 
         if (this.additionalProperties != null) {
